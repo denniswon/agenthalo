@@ -1,7 +1,9 @@
 import asyncio
 import logging
+from typing import Any, Optional
 
 from telegram import Update
+from telegram._utils.types import FileInput
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
@@ -12,34 +14,45 @@ logger = logging.getLogger(__name__)
 
 
 class TelegramApp:
-    def __init__(self, bot_token: str):
-        # Initialize bot
+    def __init__(self, bot_token: str) -> None:
         self._app = Application.builder().token(bot_token).build()
 
-    async def _start(self):
+    async def _start(self) -> None:
         """Start the bot"""
         await self._app.initialize()
         await self._app.start()
-        await self._app.updater.start_polling()
+        updater = self._app.updater
+        if updater:
+            await updater.start_polling()
         logger.info("Telegram bot started successfully")
 
-    async def _stop(self):
+    async def _stop(self) -> None:
         """Stop the bot"""
+        updater = self._app.updater
+        if updater:
+            await updater.stop()
         await self._app.stop()
-        await self._app.updater.stop()
         await self._app.shutdown()
 
-    async def send_message(self, chat_id: int, *, message: str, parse_mode: str = ParseMode.MARKDOWN) -> None:
+    async def send_message(self, chat_id: int, message: str, **kwargs: Any) -> None:
         """Send a message to a specific chat"""
         try:
-            await self._app.bot.send_message(chat_id=chat_id, text=message, parse_mode=parse_mode)
+            await self._app.bot.send_message(chat_id=chat_id, text=message, **kwargs)
         except Exception as e:
             logger.error(f"Failed to send Telegram message: {e}")
             raise e
 
+    async def send_photo(self, chat_id: int, photo: FileInput, caption: Optional[str] = None, **kwargs: Any) -> None:
+        """Send an image to a specific chat"""
+        try:
+            await self._app.bot.send_photo(chat_id=chat_id, photo=photo, caption=caption, **kwargs)
+        except Exception as e:
+            logger.error(f"Failed to send Telegram image: {e}")
+            raise e
+
 
 class TelegramBot(TelegramApp, AlphaSwarmAgentClient[Update]):
-    def __init__(self, agent: AlphaSwarmAgent, bot_token: str):
+    def __init__(self, agent: AlphaSwarmAgent, bot_token: str) -> None:
         TelegramApp.__init__(self, bot_token)
         AlphaSwarmAgentClient.__init__(self, agent=agent, client_id="telegram")
 
@@ -134,13 +147,13 @@ You can also just chat with me naturally!"""
         update = context.context
         if update.message is None:
             raise ValueError("missing message")
-        await update.message.reply_text(message.content, parse_mode="Markdown")
+        await update.message.reply_text(message.content)
 
     async def on_agent_error(self, context: Context[Update], error: ChatMessage) -> None:
         update = context.context
         if update.message is None:
             raise ValueError("missing message")
-        await update.message.reply_text(error.content, parse_mode="Markdown")
+        await update.message.reply_text(error.content)
 
     async def on_start(self) -> None:
         await self._start()

@@ -1,19 +1,36 @@
 import asyncio
-import os
+from datetime import datetime
 from typing import Optional, Sequence
 
-from alphaswarm.utils import load_strategy_config
-from smolagents import CODE_SYSTEM_PROMPT, CodeAgent, LiteLLMModel, Tool
+from alphaswarm.core.tool import AlphaSwarmToolBase
+from alphaswarm.core.tool.tool import AlphaSwarmToSmolAgentsToolAdapter
+from smolagents import CODE_SYSTEM_PROMPT, CodeAgent, LiteLLMModel
 
 
 class AlphaSwarmAgent:
 
-    def __init__(self, tools: Sequence[Tool], *, model_id: str, hints: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        tools: Sequence[AlphaSwarmToolBase],
+        model_id: str = "anthropic/claude-3-5-sonnet-20241022",
+        system_prompt: Optional[str] = None,
+        hints: Optional[str] = None,
+    ) -> None:
+        """
+        Initialize the AlphaSwarmAgent.
 
-        system_prompt = CODE_SYSTEM_PROMPT + "\n" + hints if hints else None
-        self._wallet_address = os.getenv("BASE_WALLET_ADDRESS")
+        Args:
+            tools: A sequence of tools to use.
+            model_id: The LiteLLM model ID of the LLM to use.
+            system_prompt: Optional system prompt to use. If not provided, the default system prompt will be used.
+            hints: Optional additional hints to provide to the agent.
+        """
+
+        system_prompt = system_prompt or CODE_SYSTEM_PROMPT
+        system_prompt = system_prompt + "\n" + hints if hints else system_prompt
+
         self._agent = CodeAgent(
-            tools=list(tools),
+            tools=[AlphaSwarmToSmolAgentsToolAdapter.adapt(tool) for tool in tools],
             model=LiteLLMModel(model_id=model_id),
             system_prompt=system_prompt,
             additional_authorized_imports=["json", "decimal"],
@@ -42,12 +59,9 @@ class AlphaSwarmAgent:
     def _build_context(self, current_message: str) -> str:
         messages = [
             "# User Context",
-            "## Base Wallet Address",
-            str(self._wallet_address),
             "",
-            "## Strategy Config\n\n```strategy_config```\n\n",  # To be replaced by a user context management solution
-            load_strategy_config(),
-            "\n\n```\n",
+            "## Current Date and Time",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "",
             "## Messages",
             current_message,

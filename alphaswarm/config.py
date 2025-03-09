@@ -2,45 +2,40 @@ from __future__ import annotations
 
 import logging
 import os
-from decimal import Decimal
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Self, Sequence
 
 import yaml
+from alphaswarm import BASE_PATH
+from alphaswarm.core.token import TokenInfo
 from pydantic.dataclasses import dataclass
-from typing_extensions import deprecated
-from web3 import Web3
 
 logger = logging.getLogger(__name__)
 
 NATIVE_TOKENS = {"ethereum": ["ETH"], "ethereum_sepolia": ["ETH"], "base": ["ETH"], "solana": ["SOL"]}
 
-BASE_PATH = Path(__file__).parent.parent
+
 CONFIG_PATH = BASE_PATH / "config"
 
 
-@dataclass
-class TokenInfo:
-    symbol: str
-    address: str
-    decimals: int
-    chain: str
-    is_native: bool = False
-
-    def convert_to_wei(self, amount: Decimal) -> int:
-        return int(amount * (10**self.decimals))
-
-    def convert_from_wei(self, amount: Union[int, Decimal]) -> Decimal:
-        return Decimal(amount) / (10**self.decimals)
-
-    def address_to_path(self) -> str:
-        # Remove '0x' and pad to 20 bytes
-        return self.address.removeprefix("0x").zfill(40)
+class WalletInfo:
+    def __init__(self, address: str, chain: str) -> None:
+        self._address = address
+        self._chain = chain
 
     @property
-    def checksum_address(self) -> str:
-        """Get the checksum address for this token"""
-        return Web3.to_checksum_address(self.address)
+    def address(self) -> str:
+        return self._address
+
+    @property
+    def chain(self) -> str:
+        return self._chain
+
+    def __str__(self) -> str:
+        return f"`{self._address}` on `{self._chain}` chain"
+
+    @classmethod
+    def from_chain_config(cls, chain_config: ChainConfig) -> Self:
+        return cls(address=chain_config.wallet_address, chain=chain_config.chain)
 
 
 @dataclass
@@ -70,6 +65,17 @@ class ChainConfig:
             return None
         return self.tokens[symbol]
 
+    def get_token_info_by_address(self, address: str) -> TokenInfo:
+        """Get token info for an address, raise ValueError if not found"""
+        result = self.get_token_info_by_address_or_none(address)
+        if result is None:
+            raise ValueError(f"Token {address} not found in chain config for {self.chain}")
+        return result
+
+    def get_token_info_by_address_or_none(self, address: str) -> Optional[TokenInfo]:
+        """Get token info from its address, returning None if not found"""
+        return next((token for token in self.tokens.values() if token.address == address), None)
+
 
 @dataclass
 class UniswapV2Venue:
@@ -96,6 +102,12 @@ class JupiterVenue:
 @dataclass
 class JupiterSettings:
     slippage_bps: int
+
+
+@dataclass
+class LLMConfig:
+    provider: str
+    model_id: str
 
 
 class Config:
@@ -224,9 +236,16 @@ class Config:
 
     def get_supported_networks(self) -> list:
         """Get list of supported networks for current environment"""
-        return self._config["network_environments"].get(self._network_env, [])
+        network_env = self._config["network_environments"]
+        if self._network_env != "all":
+            return network_env.get(self._network_env, [])
 
-    def get(self, key_path: str, default=None) -> Any:
+        result = set()
+        for networks in network_env.values():
+            result.update(set(networks))
+        return list(result)
+
+    def get(self, key_path: str, default: Any = None) -> Any:
         """Get configuration value using dot notation"""
         try:
             keys = key_path.split(".")
@@ -237,25 +256,12 @@ class Config:
         except (KeyError, TypeError):
             return default
 
-    @deprecated("use ChainConfig.get_token_info() instead")
-    def get_token_info(self, *, chain: str, token: str) -> TokenInfo:
-        """Get token info for a symbol, raising an error if not found"""
-        try:
-            values = self._config["chain_config"][chain]["tokens"][token]
-            return TokenInfo(symbol=token, chain=chain, **values)
-        except KeyError:
-            raise ValueError(f"Token {token} not found in chain {chain} config")
-
-    @deprecated("use ChainConfig.get_token_info_or_none() instead")
-    def get_token_info_or_none(self, *, chain: str, token: str) -> Optional[TokenInfo]:
-        """Get token info for a symbol, returning None if not found"""
-        try:
-            return self.get_token_info(chain=chain, token=token)
-        except ValueError:
-            return None
-
     def get_chain_config(self, chain: str) -> ChainConfig:
-        values = self._config["chain_config"][chain].copy()
+        chain_config_dict: Dict[str, Any] = self._config["chain_config"]
+        if chain not in chain_config_dict:
+            raise ValueError(f"Unknown chain! Configured chains: [{', '.join(chain_config_dict.keys())}]")
+
+        values = chain_config_dict[chain].copy()
         values["chain"] = chain
         # Convert each token config into a TokenInfo instance
         if "tokens" in values:
@@ -269,53 +275,21 @@ class Config:
         """Get chain config or None if chain doesn't exist"""
         try:
             return self.get_chain_config(chain)
-        except KeyError:
+        except (KeyError, ValueError):
             return None
 
     def get_trading_venues(self) -> Dict[str, Any]:
         """Get all trading venues configuration"""
         return self._config.get("trading_venues", {})
 
-    def get_trading_venues_for_chain(self, chain: str) -> Optional[Dict[str, Any]]:
+    def get_trading_venues_for_chain(self, chain: str) -> List[str]:
         """Get all trading venues configuration for a chain"""
-        try:
-            return self._config.get("trading_venues", {}).get(chain, {})
-        except KeyError:
-            return None
+        result = []
+        for name, value in self.get_trading_venues().items():
+            if isinstance(value, dict) and value.get(chain) is not None:
+                result.append(name)
 
-    def get_trading_venues_for_token_pair(
-        self, base_token: str, quote_token: str, chain: str, specific_venue: Optional[str] = None
-    ) -> Sequence[str]:
-        """Find all venues that support a given token pair on a chain"""
-        venues: List[str] = []
-
-        # Get token info
-        base_token_info = self.get_token_info_or_none(chain=chain, token=base_token)
-        quote_token_info = self.get_token_info_or_none(chain=chain, token=quote_token)
-
-        if not base_token_info or not quote_token_info:
-            logger.warning(f"Token pair {base_token}/{quote_token} not found in chain {chain} config")
-            return venues
-
-        # Check each venue in trading_venues
-        trading_venues = self.get_trading_venues()
-        for venue_name, venue_config in trading_venues.items():
-            # Skip if not looking for this specific venue
-            if specific_venue and venue_name != specific_venue:
-                continue
-
-            # Skip if venue not supported on this chain
-            if chain not in venue_config:
-                continue
-
-            # Check if the pair is in supported_pairs for this chain
-            chain_venue_config = venue_config[chain]
-            pair_str = f"{base_token}_{quote_token}"
-            supported_pairs = chain_venue_config.get("supported_pairs", [])
-            if pair_str in supported_pairs:
-                venues.append(venue_name)
-
-        return venues
+        return result
 
     def get_venue_uniswap_v2(self, chain: str) -> UniswapV2Venue:
         values = self._config["trading_venues"]["uniswap_v2"][chain]
@@ -336,3 +310,50 @@ class Config:
     def get_venue_settings_jupiter(self) -> JupiterSettings:
         values = self._config["trading_venues"]["jupiter"]["settings"]
         return JupiterSettings(**values)
+
+    def get_default_llm_config(self, provider: str) -> LLMConfig:
+        """Get LLM configuration for a specific provider.
+
+        Args:
+            provider: The LLM provider to use ("openai" or "anthropic")
+
+        Raises:
+            ValueError: If the API key for the requested provider is not configured
+        """
+        if provider == "openai":
+            if not os.getenv("OPENAI_API_KEY"):
+                raise ValueError("OpenAI API key not found in environment variables")
+            return LLMConfig(provider=provider, model_id=os.getenv("DEFAULT_OPENAI_MODEL", "gpt-4"))
+        elif provider == "anthropic":
+            if not os.getenv("ANTHROPIC_API_KEY"):
+                raise ValueError("Anthropic API key not found in environment variables")
+            return LLMConfig(
+                provider=provider, model_id=os.getenv("DEFAULT_ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022")
+            )
+        else:
+            raise ValueError(f"Unsupported LLM provider: {provider}")
+
+
+def get_wallets_info() -> Sequence[WalletInfo]:
+    """Get wallet information from environment variables for all supported chains.
+
+    Returns:
+        Sequence[WalletInfo]: List of wallet information objects.
+    """
+    wallet_env_mapping = {
+        "ethereum": "ETH_WALLET_ADDRESS",
+        "ethereum_sepolia": "ETH_SEPOLIA_WALLET_ADDRESS",
+        "base": "BASE_WALLET_ADDRESS",
+        "base_sepolia": "BASE_SEPOLIA_WALLET_ADDRESS",
+        "solana": "SOL_WALLET_ADDRESS",
+        "solana_devnet": "SOL_DEVNET_WALLET_ADDRESS",
+        "solana_testnet": "SOL_TESTNET_WALLET_ADDRESS",
+    }
+
+    wallets = []
+    for chain, env_var in wallet_env_mapping.items():
+        address = os.getenv(env_var)
+        if address:
+            wallets.append(WalletInfo(address=address, chain=chain))
+
+    return wallets

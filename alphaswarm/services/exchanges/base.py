@@ -3,72 +3,120 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import List, Optional, Tuple
+from typing import Annotated, Any, Generic, List, Tuple, Type, TypeGuard, TypeVar, Union
 
-from alphaswarm.config import Config, TokenInfo
-from hexbytes import HexBytes
+from alphaswarm.config import ChainConfig, Config, TokenInfo
+from alphaswarm.core.token import TokenAmount
+from pydantic import BaseModel, Field
+
+T = TypeVar("T", bound="DEXClient")
+TQuote = TypeVar("TQuote")
+
+
+class QuoteResult(BaseModel, Generic[TQuote]):
+    quote: Annotated[TQuote, Field(repr=False)]
+
+    token_in: TokenInfo
+    token_out: TokenInfo
+    amount_in: Decimal
+    amount_out: Decimal
+
+
+class SwapResult(BaseModel):
+    amount_out: Decimal
+    amount_in: Decimal
+    tx_hash: str
+
+    @classmethod
+    def build_success(cls, amount_out: Decimal, amount_in: Decimal, tx_hash: str) -> SwapResult:
+        return cls(amount_out=amount_out, amount_in=amount_in, tx_hash=tx_hash)
 
 
 @dataclass
-class SwapResult:
-    success: bool
-    base_amount: float
-    quote_amount: float
-    tx_hash: Optional[str] = None
-    error: Optional[str] = None
+class Slippage:
+    """
+    Represents slippage tolerance for trades
+    Attributes:
+        bps (int): Basis points (1 bps = 0.01%)
+    """
+
+    base_point: int = 10000
+
+    def __init__(self, bps: int = 100) -> None:
+        if not 0 <= bps <= self.base_point:
+            raise ValueError("Slippage must be between 0 and 10000 basis points (0% to 100%)")
+        self.bps = bps
 
     @classmethod
-    def build_error(cls, error: str, base_amount: float) -> SwapResult:
-        return cls(success=False, base_amount=base_amount, quote_amount=0, error=error)
+    def from_percentage(cls, percentage: Union[float, Decimal]) -> Slippage:
+        """Create Slippage from percentage value (e.g., 100.0 for 1%)"""
+        bps = int(float(percentage) * 100)
+        return cls(bps=bps)
 
-    @classmethod
-    def build_success(cls, base_amount: float, quote_amount: float, tx_hash: HexBytes) -> SwapResult:
-        return cls(success=True, base_amount=base_amount, quote_amount=quote_amount, tx_hash=tx_hash.hex())
+    def to_percentage(self) -> float:
+        """Convert basis points to percentage"""
+        return self.bps / 100.0
+
+    def to_multiplier(self) -> Decimal:
+        """Convert to multiplier for price calculations (e.g., 0.99 for 1% slippage)"""
+        return Decimal(1) - (Decimal(self.bps) / Decimal(self.base_point))
+
+    def calculate_minimum_amount(self, amount: Union[int, str, Decimal]) -> int:
+        """Calculate minimum amount after slippage"""
+        return int(Decimal(amount) * self.to_multiplier())
+
+    def __str__(self) -> str:
+        return f"{self.bps} bps"
+
+    def __repr__(self) -> str:
+        return f"Slippage(bps={self.bps})"
 
 
-class DEXClient(ABC):
+class DEXClient(Generic[TQuote], ABC):
     """Base class for DEX clients"""
 
     @abstractmethod
-    def __init__(self, config: Config, chain: str) -> None:
+    def __init__(self, chain_config: ChainConfig, quote_type: Type[TQuote]) -> None:
         """Initialize the DEX client with configuration"""
-        self.config = config
-        self.chain = chain
+        self._chain_config = chain_config
+        self._quote_type = quote_type
+
+    @property
+    def chain(self) -> str:
+        return self._chain_config.chain
+
+    @property
+    def chain_config(self) -> ChainConfig:
+        return self._chain_config
 
     @abstractmethod
-    def get_token_price(self, base_token: TokenInfo, quote_token: TokenInfo) -> Decimal:
-        """Get current token price.
+    def get_token_price(self, token_out: TokenInfo, amount_in: TokenAmount) -> QuoteResult[TQuote]:
+        """Get price/conversion rate for the pair of tokens.
 
-        Gets the current price from either Uniswap V2 or V3 pools based on the client version.
-        The price is returned in terms of base/quote (how much quote token per base token).
+        The price is returned in terms of token_out/token_in (how much token out per token in).
 
         Args:
-            base_token (TokenInfo): Base token info (token being priced)
-            quote_token (TokenInfo): Quote token info (denominator token)
+            token_out (TokenInfo): The token to be bought (going out from the pool)
+            amount_in (Decimal): The amount of the token to be sold
 
         Example:
             eth_token = TokenInfo(address="0x...", decimals=18, symbol="ETH", chain="ethereum")
             usdc_token = TokenInfo(address="0x...", decimals=6, symbol="USDC", chain="ethereum")
-            get_token_price(eth_token, usdc_token)
-            Returns: The price of 1 ETH in USDC
+            get_token_price(token_out=eth_token, token_in=usdc_token)
+            Returns: The amount of ETH for 1 USDC
         """
         pass
 
-    # TODO: using `float` for the amount is potentially dangerous because of precision limitation and rounding issues.
     @abstractmethod
     def swap(
         self,
-        base_token: TokenInfo,
-        quote_token: TokenInfo,
-        quote_amount: float,
+        quote: QuoteResult[TQuote],
         slippage_bps: int = 100,
     ) -> SwapResult:
         """Execute a token swap on the DEX
 
         Args:
-            base_token: TokenInfo object for the token being sold
-            quote_token: TokenInfo object for the token being bought
-            quote_amount: Amount of quote_token to spend (output amount)
+            quote (TokenPrice): The quote to execute
             slippage_bps: Maximum allowed slippage in basis points (1 bp = 0.01%)
 
         Returns:
@@ -93,3 +141,24 @@ class DEXClient(ABC):
             List of tuples containing (base_token, quote_token) for each valid trading pair
         """
         pass
+
+    @classmethod
+    @abstractmethod
+    def from_config(cls: Type[T], config: Config, chain: str) -> T:
+        """Create a DEX client instance from configuration
+
+        Args:
+            config: Chain-specific configuration
+            chain: Chain name (e.g., "ethereum", "base")
+
+        Returns:
+            An instance of the DEX client
+        """
+        pass
+
+    def raise_if_not_quote(self, value: Any) -> None:
+        if self.is_quote(value):
+            raise TypeError(f"Expected {self._quote_type} but got {type(value)}")
+
+    def is_quote(self, value: Any) -> TypeGuard[QuoteResult[TQuote]]:
+        return isinstance(value, QuoteResult) and isinstance(value.quote, self._quote_type)

@@ -5,7 +5,7 @@ from alphaswarm.config import Config
 
 from .base import DEXClient
 from .jupiter.jupiter import JupiterClient
-from .uniswap.uniswap import UniswapClientV2, UniswapClientV3
+from .uniswap import UniswapClientV2, UniswapClientV3
 
 logger = logging.getLogger(__name__)
 
@@ -31,13 +31,13 @@ class DEXFactory:
             raise ValueError(f"Unsupported DEX: {dex_name}")
 
         logger.debug(f"Using DEX class: {dex_client_class.__name__}")
-        client = dex_client_class(config, chain)
+        client = dex_client_class.from_config(config, chain)
 
         logger.debug("DEX client created successfully")
         return client
 
     @classmethod
-    def register_dex(cls, name: str, dex_class: Type[DEXClient]):
+    def register_dex(cls, name: str, dex_class: Type[DEXClient]) -> None:
         """Register a new DEX client class"""
         logger.debug(f"Registering new DEX type: {name} with class {dex_class.__name__}")
         cls._dex_registry[name] = dex_class

@@ -47,7 +47,7 @@ class ChatMessage:
 
 class AlphaSwarmAgentClient(ABC, Generic[T_Context]):
 
-    def __init__(self, agent: AlphaSwarmAgent, client_id: str):
+    def __init__(self, agent: AlphaSwarmAgent, client_id: str, max_history: int = 50) -> None:
         self._agent = agent
         self._agent_lock = asyncio.Lock()
         self._client_id = client_id
@@ -55,7 +55,7 @@ class AlphaSwarmAgentClient(ABC, Generic[T_Context]):
 
         # Message history buffer (client_id -> list of messages)
         self._message_buffer: Dict[int, List[ChatMessage]] = defaultdict(list)
-        self.max_history = 50
+        self.max_history = max_history
 
     @property
     def id(self) -> str:
@@ -113,7 +113,7 @@ class AlphaSwarmAgentClient(ABC, Generic[T_Context]):
                 self._message_buffer[channel_id].append(error_message)
                 await self.on_agent_error(context, error_message)
 
-    async def start(self):
+    async def start(self) -> None:
         """Start the client with proper registration"""
         if self._lock:
             raise RuntimeError("Client already started")
@@ -131,7 +131,7 @@ class AlphaSwarmAgentClient(ABC, Generic[T_Context]):
         finally:
             await self.stop()
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop the client and cleanup"""
         if not self._lock:
             raise RuntimeError("Client not started")
@@ -144,15 +144,18 @@ class AlphaSwarmAgentClient(ABC, Generic[T_Context]):
 
     def _format_message(self, channel_id: int, message: str) -> str:
         """Format a message for display in the chat"""
-        formatted_message = ""
+        formatted_message = [
+            "Below is the conversation between you and the user. Respond to the latest message from the user keeping in mind the context of the conversation from the previous messages."
+        ]
         if self._message_buffer[channel_id]:
-            formatted_message += "Previous Messages:\n"
+            formatted_message.extend(["", "Previous Messages:", "---"])
             for msg in self._message_buffer[channel_id]:
-                formatted_message += f"- {msg.sender}: {msg.content}\n"
-            formatted_message += "\nLatest Message:\n"
+                formatted_message.append(f"{msg.sender}: {msg.content}")
+            formatted_message.append("---")
+
+        formatted_message.extend(["Latest Message:", "---", message, "---"])
 
         new_message = ChatMessage.create(sender="user", content=message)
         self._message_buffer[channel_id].append(new_message)
 
-        formatted_message += message
-        return formatted_message
+        return "\n".join(formatted_message)
