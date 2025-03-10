@@ -6,26 +6,36 @@ from newtonswarm.config import Config
 from newtonswarm.core.tool import NewtonSwarmToolBase
 from newtonswarm.tools.core import GetTokenAddress
 from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from newtonswarm.tools.strategy_analysis import AnalyzeTradingStrategy, Strategy
 
 dotenv.load_dotenv()
 config = Config(network_env="test")  # Use a testnet environment (as defined in config/default.yaml)
 
 # Initialize tools
+llm_config = config.get_default_llm_config("anthropic")
+strategy = Strategy(
+    rules="Swap 3 USDC for WETH on Ethereum Sepolia when price below 10_000 USDC per WETH",
+    model_id=llm_config.model_id,
+)
+
 tools: List[NewtonSwarmToolBase] = [
     GetTokenAddress(config),  # Get token address from a symbol
     GetTokenPrice(config),  # Get the price of a token pair from available DEXes given addresses
-    # GetTokenPrice outputs a quote needed for ExecuteTokenSwap tool
-    ExecuteTokenSwap(config),  # Execute a token swap on a supported DEX
+    AnalyzeTradingStrategy(strategy),  # Check a trading strategy
+    ExecuteTokenSwap(config),  # Execute a token swap on a supported DEX (Uniswap V2/V3 on Ethereum and Base chains)
 ]
 
 # Create the agent
-llm_config = config.get_default_llm_config("anthropic")
 agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id)
 
+# Interact with the agent
+async def _strategy_trade(query: str) -> str:
+    response = await agent.process_message(query)
+    return response
 
 # Interact with the agent
 async def main() -> None:
-    response = await agent.process_message("Swap 3 USDC for WETH on Ethereum Sepolia")
+    response = await agent.process_message("Check strategy and initiate a trade if applicable")
     print(response)
 
 

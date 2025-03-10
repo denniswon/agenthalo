@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
-from examples.basic.quote import basic_quote
+from agents.basic.quote import basic_quote
+from agents.basic.swap import _swap
+from agents.basic.strategy import _strategy_trade
 load_dotenv()
 
 from fastapi import FastAPI
@@ -25,5 +27,18 @@ async def derive_key():
 
 @app.get('/get_quote')
 async def get_quote():
-    response = await basic_quote("What's the current price of AIXBT in USDC on Base for Uniswap v3?")
-    return response
+    query = "What's the current price of AIXBT in USDC on Base for Uniswap v3?"
+    response = await basic_quote(query)
+    return f"Query: {query}\nResponse: {response}"
+
+@app.get('/swap')
+async def swap():
+    query = "Swap 3 USDC for WETH on Base Sepolia"
+    response = await _swap(query)
+    return f"Query: {query}\nResponse: {response}"
+
+@app.get('/strategy_trade')
+async def strategy_trade():
+    query = "Check strategy and initiate a trade if applicable"
+    response = await _strategy_trade(query)
+    return f"Query: {query}\nResponse: {response}"
