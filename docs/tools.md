@@ -1,13 +1,13 @@
-# Contributing Tools to AlphaSwarm
+# Contributing Tools to NewtonSwarm
 
 ## Overview
 
-This guide will walk you through creating and contributing new tools to the AlphaSwarm ecosystem.
+This guide will walk you through creating and contributing new tools to the NewtonSwarm ecosystem.
 For general contributing guidelines, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Tool Architecture
 
-Tools in AlphaSwarm follow a class-based architecture inheriting from `AlphaSwarmToolBase`. Each tool is designed to be:
+Tools in NewtonSwarm follow a class-based architecture inheriting from `NewtonSwarmToolBase`. Each tool is designed to be:
 
 - 🎯 **Single-Purpose**: Focused on one specific functionality
 - 📝 **Self-Documenting**: Using Python docstrings and type hints
@@ -18,13 +18,13 @@ Tools in AlphaSwarm follow a class-based architecture inheriting from `AlphaSwar
 
 ### 1. Basic Structure
 
-Create a new Python file in the appropriate subdirectory under `alphaswarm/tools/`. Here's a template for a new tool:
+Create a new Python file in the appropriate subdirectory under `newtonswarm/tools/`. Here's a template for a new tool:
 
 ```python
 from typing import Optional
 from pydantic import BaseModel, Field
 
-from alphaswarm.core.tool import AlphaSwarmToolBase
+from newtonswarm.core.tool import NewtonSwarmToolBase
 
 # Optional: Define input/output models if needed
 # If you inherit from pydantic.BaseModel, schema information 
@@ -33,7 +33,7 @@ class MyToolOutput(BaseModel):
     result: str = Field(description="The result of the tool")
     confidence: float = Field(description="The confidence in the result, from 0 to 1")
 
-class DoSomethingCool(AlphaSwarmToolBase):
+class DoSomethingCool(NewtonSwarmToolBase):
     """
     A clear description of what your tool does.
     Include key features and any important notes about usage.
@@ -128,7 +128,7 @@ class DoSomethingCool(AlphaSwarmToolBase):
 Before creating a new tool category, ensure that none of the existing categories fits your new tool.
 
 ```
-alphaswarm/
+newtonswarm/
 ├── tools/
 │   ├── tool_category/
 │   │   ├── __init__.py
@@ -155,14 +155,14 @@ We use the following naming conventions for tools:
 
 ## Example Tools
 
-For a complete example, refer to any tool in the `alphaswarm/tools/` directory.
+For a complete example, refer to any tool in the `newtonswarm/tools/` directory.
 Here are some examples:
-- Tool that fetches the USD price of a token with CoinGecko API: [GetUsdPrice](../alphaswarm/tools/core/get_usd_price.py)
-- Tool that uses Alchemy service: [GetAlchemyPriceHistoryBySymbol](../alphaswarm/tools/alchemy/alchemy_price_history.py)
-- Tool that uses LLM to analyze trading strategies: [AnalyzeTradingStrategy](../alphaswarm/tools/strategy_analysis/generic/generic_analysis.py)
+- Tool that fetches the USD price of a token with CoinGecko API: [GetUsdPrice](../newtonswarm/tools/core/get_usd_price.py)
+- Tool that uses Alchemy service: [GetAlchemyPriceHistoryBySymbol](../newtonswarm/tools/alchemy/alchemy_price_history.py)
+- Tool that uses LLM to analyze trading strategies: [AnalyzeTradingStrategy](../newtonswarm/tools/strategy_analysis/generic/generic_analysis.py)
 
 ## Support
 
 Need help? Check our [Discord](https://discord.gg/theoriq-dev) or open an issue on GitHub.
 
-Remember: Tools are a critical part of AlphaSwarm's ecosystem. Well-designed tools make the entire system more powerful and useful for everyone.
+Remember: Tools are a critical part of NewtonSwarm's ecosystem. Well-designed tools make the entire system more powerful and useful for everyone.

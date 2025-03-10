@@ -1,7 +1,7 @@
 from decimal import Decimal
 
-from alphaswarm.config import TokenInfo
-from alphaswarm.services.exchanges import QuoteResult
+from newtonswarm.config import TokenInfo
+from newtonswarm.services.exchanges import QuoteResult
 
 
 def test_quote_result_str() -> None:

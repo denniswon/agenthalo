@@ -4,7 +4,7 @@ from typing import Dict, Any
 import pytest
 from pydantic import ValidationError
 
-from alphaswarm.services.alchemy.alchemy_client import Balance
+from newtonswarm.services.alchemy.alchemy_client import Balance
 
 
 @pytest.fixture

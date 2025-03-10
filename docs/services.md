@@ -1,13 +1,13 @@
-# Contributing Services to AlphaSwarm
+# Contributing Services to NewtonSwarm
 
 ## Overview
 
-This guide will walk you through creating and contributing new services to the AlphaSwarm ecosystem.
+This guide will walk you through creating and contributing new services to the NewtonSwarm ecosystem.
 For general contributing guidelines, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Service Architecture
 
-Services in AlphaSwarm are built around the following core principles:
+Services in NewtonSwarm are built around the following core principles:
 
 - 🎯 **Focused**: Dedicated to a specific domain or functionality
 - 🔌 **Independent**: Minimally coupled with other services
@@ -20,10 +20,10 @@ Services are encouraged to encapsulate all the business logic for a specific fea
 
 ### 1. Basic Structure
 
-A new service should follow a clear and consistent structure. Before creating a new service category, ensure that none of the existing categories fits your new service. Your service code should reside under the appropriate category within the `alphaswarm/services/` directory. A typical directory structure might look like this:
+A new service should follow a clear and consistent structure. Before creating a new service category, ensure that none of the existing categories fits your new service. Your service code should reside under the appropriate category within the `newtonswarm/services/` directory. A typical directory structure might look like this:
 
 ```
-alphaswarm/
+newtonswarm/
 ├── services/
 │   ├── service_category/
 │   │   ├── __init__.py
@@ -82,10 +82,10 @@ class MyCustomService:
 
 ## Example Services
 
-For complete examples, refer to existing services in the `alphaswarm/services/` directory.
+For complete examples, refer to existing services in the `newtonswarm/services/` directory.
 
 ## Support
 
 Need help? Check our [Discord](https://discord.gg/theoriq-dev) or open an issue on GitHub.
 
-Remember: Services are critical infrastructure components of AlphaSwarm. Well-designed services ensure reliable and scalable system operation.
+Remember: Services are critical infrastructure components of NewtonSwarm. Well-designed services ensure reliable and scalable system operation.

@@ -28,7 +28,7 @@ We prefer all communications to be in English.
 
 ## In-Scope Targets
 
-- alphaswarm package
+- newtonswarm package
 
 ## Out of Scope Targets
 

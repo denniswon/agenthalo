@@ -4,13 +4,13 @@ import random
 from typing import Callable, List
 
 import dotenv
-from alphaswarm.agent.agent import AlphaSwarmAgent
-from alphaswarm.agent.clients import CronJobClient
-from alphaswarm.config import Config
-from alphaswarm.core.tool import AlphaSwarmToolBase
-from alphaswarm.tools.alchemy import GetAlchemyPriceHistoryBySymbol
-from alphaswarm.tools.core import GetUsdPrice
-from alphaswarm.tools.exchanges import GetTokenPrice
+from newtonswarm.agent.agent import NewtonSwarmAgent
+from newtonswarm.agent.clients import CronJobClient
+from newtonswarm.config import Config
+from newtonswarm.core.tool import NewtonSwarmToolBase
+from newtonswarm.tools.alchemy import GetAlchemyPriceHistoryBySymbol
+from newtonswarm.tools.core import GetUsdPrice
+from newtonswarm.tools.exchanges import GetTokenPrice
 
 logging.getLogger("smolagents").setLevel(logging.ERROR)
 
@@ -23,11 +23,11 @@ async def main() -> None:
     # GetUsdPrice: General price queries
     # GetTokenPrice: Real-time token prices
     # GetAlchemyPriceHistoryBySymbol: Historical price data from Alchemy
-    tools: List[AlphaSwarmToolBase] = [GetUsdPrice(), GetTokenPrice(config), GetAlchemyPriceHistoryBySymbol()]
+    tools: List[NewtonSwarmToolBase] = [GetUsdPrice(), GetTokenPrice(config), GetAlchemyPriceHistoryBySymbol()]
 
-    # Initialize the AlphaSwarm agent with the price tools
+    # Initialize the NewtonSwarm agent with the price tools
     llm_config = config.get_default_llm_config("anthropic")
-    agent = AlphaSwarmAgent(tools=tools, model_id=llm_config.model_id)
+    agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id)
 
     def generate_message_cron_job1() -> str:
         # Randomly generate price queries for major cryptocurrencies
@@ -51,19 +51,19 @@ async def main() -> None:
     # Create a cron job client that runs every 60 seconds
     cron_client_1 = CronJobClient(
         agent=agent,
-        client_id="AlphaSwarm1",
+        client_id="NewtonSwarm1",
         interval_seconds=60,
         message_generator=generate_message_cron_job1,
-        response_handler=response_handler("AlphaSwarm1"),
+        response_handler=response_handler("NewtonSwarm1"),
     )
 
     # Create a second cron job client that runs every 15 seconds
     cron_client_2 = CronJobClient(
         agent=agent,
-        client_id="AlphaSwarm2",
+        client_id="NewtonSwarm2",
         interval_seconds=15,
         message_generator=generate_message_cron_job2,
-        response_handler=response_handler("AlphaSwarm2"),
+        response_handler=response_handler("NewtonSwarm2"),
     )
 
     # Run both cron jobs concurrently using asyncio

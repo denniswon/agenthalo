@@ -2,8 +2,8 @@ from typing import Optional
 
 import pytest
 
-from alphaswarm.tools.exchanges import GetTokenPrice
-from alphaswarm.config import Config
+from newtonswarm.tools.exchanges import GetTokenPrice
+from newtonswarm.config import Config
 
 
 @pytest.mark.parametrize(

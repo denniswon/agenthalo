@@ -1,8 +1,8 @@
 import pytest
 from eth_typing import ChecksumAddress
 
-from alphaswarm.config import Config
-from alphaswarm.services.chains import EVMClient
+from newtonswarm.config import Config
+from newtonswarm.services.chains import EVMClient
 
 
 @pytest.fixture

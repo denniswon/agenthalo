@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 from pydantic import BaseModel
 
-from alphaswarm.core.llm import LLMFunctionTemplated
+from newtonswarm.core.llm import LLMFunctionTemplated
 
 
 class Response(BaseModel):

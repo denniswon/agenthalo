@@ -2,8 +2,8 @@ from decimal import Decimal
 
 import pytest
 
-from alphaswarm.config import Config
-from alphaswarm.services.exchanges.jupiter.jupiter import JupiterClient
+from newtonswarm.config import Config
+from newtonswarm.services.exchanges.jupiter.jupiter import JupiterClient
 
 
 @pytest.fixture

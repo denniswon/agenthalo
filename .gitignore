@@ -72,8 +72,12 @@ db.sqlite3
 db.sqlite3-journal
 
 # API keys and secrets
+.env
 .env.local
 .env.*.local
 
 # Data Processing
 *.png
+
+# Tappd Simulator
+tappd-simulator-*

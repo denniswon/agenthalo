@@ -3,24 +3,24 @@ import json
 from typing import List, Mapping
 
 import dotenv
-from alphaswarm.agent.agent import AlphaSwarmAgent
-from alphaswarm.agent.clients import TerminalClient
-from alphaswarm.config import CONFIG_PATH, Config
-from alphaswarm.core.tool import AlphaSwarmToolBase
-from alphaswarm.tools.alchemy import GetAlchemyPriceHistoryByAddress, GetAlchemyPriceHistoryBySymbol
-from alphaswarm.tools.cookie import (
+from newtonswarm.agent.agent import NewtonSwarmAgent
+from newtonswarm.agent.clients import TerminalClient
+from newtonswarm.config import CONFIG_PATH, Config
+from newtonswarm.core.tool import NewtonSwarmToolBase
+from newtonswarm.tools.alchemy import GetAlchemyPriceHistoryByAddress, GetAlchemyPriceHistoryBySymbol
+from newtonswarm.tools.cookie import (
     GetCookieMetricsByContract,
     GetCookieMetricsBySymbol,
     GetCookieMetricsByTwitter,
     GetCookieMetricsPaged,
 )
-from alphaswarm.tools.core import GetTokenAddress, GetUsdPrice
-from alphaswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
-from alphaswarm.tools.portfolio import GetPortfolioBalance
-from alphaswarm.tools.strategy_analysis.generic import AnalyzeTradingStrategy
-from alphaswarm.tools.strategy_analysis.strategy import Strategy
-from alphaswarm.tools.telegram import SendTelegramNotification
-from alphaswarm.utils import read_text_file_to_string
+from newtonswarm.tools.core import GetTokenAddress, GetUsdPrice
+from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from newtonswarm.tools.portfolio import GetPortfolioBalance
+from newtonswarm.tools.strategy_analysis.generic import AnalyzeTradingStrategy
+from newtonswarm.tools.strategy_analysis.strategy import Strategy
+from newtonswarm.tools.telegram import SendTelegramNotification
+from newtonswarm.utils import read_text_file_to_string
 
 
 async def main() -> None:
@@ -33,7 +33,7 @@ async def main() -> None:
 
     strategy = Strategy.from_file(filename=str(CONFIG_PATH / "momentum_strategy_config.md"))
 
-    tools: List[AlphaSwarmToolBase] = [
+    tools: List[NewtonSwarmToolBase] = [
         GetUsdPrice(),
         GetTokenAddress(config),
         GetTokenPrice(config),
@@ -66,9 +66,9 @@ async def main() -> None:
     hints = read_text_file_to_string(CONFIG_PATH / "trading_strategy_agent_hints.txt")
 
     llm_config = config.get_default_llm_config("anthropic")
-    agent = AlphaSwarmAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
+    agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
 
-    terminal = TerminalClient("AlphaSwarm terminal", agent)
+    terminal = TerminalClient("NewtonSwarm terminal", agent)
     await asyncio.gather(
         terminal.start(),
     )

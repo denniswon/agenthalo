@@ -1,5 +1,5 @@
-from alphaswarm.services.chains import SolanaClient
-from alphaswarm.config import Config
+from newtonswarm.services.chains import SolanaClient
+from newtonswarm.config import Config
 
 
 def test_get_solana_balance(default_config: Config) -> None:

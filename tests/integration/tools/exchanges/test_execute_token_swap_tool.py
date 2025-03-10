@@ -2,10 +2,10 @@ from decimal import Decimal
 
 import pytest
 
-from alphaswarm.config import Config
-from alphaswarm.services.chains import EVMClient
-from alphaswarm.tools.core import GetTokenAddress
-from alphaswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from newtonswarm.config import Config
+from newtonswarm.services.chains import EVMClient
+from newtonswarm.tools.core import GetTokenAddress
+from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
 
 
 @pytest.fixture

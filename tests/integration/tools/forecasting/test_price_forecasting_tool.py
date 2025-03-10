@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pytest
 
-from alphaswarm.services.alchemy import AlchemyClient
-from alphaswarm.tools.forecasting import ForecastTokenPrice
+from newtonswarm.services.alchemy import AlchemyClient
+from newtonswarm.tools.forecasting import ForecastTokenPrice
 
 
 @pytest.fixture

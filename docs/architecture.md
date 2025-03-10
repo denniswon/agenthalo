@@ -1,12 +1,12 @@
-# AlphaSwarm Architecture
+# NewtonSwarm Architecture
 
 ## Introduction
 
-AlphaSwarm is currently built with the [smolagents](https://github.com/huggingface/smolagents) framework. AlphaSwarm adds value on top of this in the form of customizable services, tools, and agent configurations geared for trading and DeFi.
+NewtonSwarm is currently built with the [smolagents](https://github.com/huggingface/smolagents) framework. NewtonSwarm adds value on top of this in the form of customizable services, tools, and agent configurations geared for trading and DeFi.
 
 ### About `CodeAgent`
 
-AlphaSwarm agents are currently based on the `CodeAgent` from `smolagents`. AlphaSwarm additionally provides specialized tools and configurations for crypto trading. The key benefit of adopting the `CodeAgent` has to do with the way it uses tools:
+NewtonSwarm agents are currently based on the `CodeAgent` from `smolagents`. NewtonSwarm additionally provides specialized tools and configurations for crypto trading. The key benefit of adopting the `CodeAgent` has to do with the way it uses tools:
 
 - Instead of using structured JSON for tool invocation (the industry standard), agents generate and execute Python code directly
 - This Python-based approach enables greater flexibility - agents can write additional code before/after tool invocations
@@ -107,7 +107,7 @@ Services contain the core implementation logic decoupled from any specific tool:
 ### Current Directory Structure
 
 ```
-alphaswarm/
+newtonswarm/
 ├── agent/       # Agent and agent clients implementation
 ├── core/        # Core framework components
 ├── services/    # Service implementations

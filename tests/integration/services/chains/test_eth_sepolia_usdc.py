@@ -1,8 +1,8 @@
 import pytest
 from web3 import Web3
 
-from alphaswarm.config import ChainConfig, Config
-from alphaswarm.services.chains.evm import ERC20Contract, EVMSigner, EVMClient
+from newtonswarm.config import ChainConfig, Config
+from newtonswarm.services.chains.evm import ERC20Contract, EVMSigner, EVMClient
 
 
 @pytest.fixture

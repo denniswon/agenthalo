@@ -1,5 +1,5 @@
-from alphaswarm.config import Config
-from alphaswarm.services.chains import EVMClient
+from newtonswarm.config import Config
+from newtonswarm.services.chains import EVMClient
 
 
 def test_get_token_info(default_config: Config) -> None:

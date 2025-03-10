@@ -1,6 +1,6 @@
-# AlphaSwarm
+# NewtonSwarm
 
-AlphaSwarm is a starter kit for building LLM-powered AI agents that interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
+NewtonSwarm is a starter kit for building LLM-powered AI agents that interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
 
 ## Features
 
@@ -57,8 +57,8 @@ Then follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/chain-ml/alphaswarm.git
-cd alphaswarm
+git clone https://github.com/chain-ml/newtonswarm.git
+cd newtonswarm
 ```
 
 2. Install dependencies:
@@ -173,6 +173,31 @@ Note: Always verify contract addresses from official sources.
 
 See [examples/README.md](examples/README.md) for more information about usage examples.
 
+## API
+
+We also need to download the DStack simulator:
+
+```shell
+# Mac
+wget https://github.com/Leechael/tappd-simulator/releases/download/v0.1.4/tappd-simulator-0.1.4-aarch64-apple-darwin.tgz
+tar -xvf tappd-simulator-0.1.4-aarch64-apple-darwin.tgz
+cd tappd-simulator-0.1.4-aarch64-apple-darwin
+./tappd-simulator -l unix:/tmp/tappd.sock
+
+# Linux
+wget https://github.com/Leechael/tappd-simulator/releases/download/v0.1.4/tappd-simulator-0.1.4-x86_64-linux-musl.tgz
+tar -xvf tappd-simulator-0.1.4-x86_64-linux-musl.tgz
+cd tappd-simulator-0.1.4-x86_64-linux-musl
+./tappd-simulator -l unix:/tmp/tappd.sock
+```
+
+Once the simulator is running, you need to open another terminal to start your FastAPI development server:
+
+```shell
+# Start the FastAPI dev server
+python -m fastapi dev
+```
+
 ## Development
 
 ### Running Tests
@@ -223,15 +248,15 @@ We provide support and welcome feedback on our [Discord](https://discord.gg/theo
 
 ## Contributing
 
-Alphaswarm is a project under active development. We welcome all contributions, pull requests, feature requests or reported issues.
+NewtonSwarm is a project under active development. We welcome all contributions, pull requests, feature requests or reported issues.
 
 ## Disclaimer
 
 **IMPORTANT LEGAL NOTICE AND RISK DISCLOSURE**
 
-AlphaSwarm is experimental software in active development. All features, tools, and capabilities should be considered experimental and used with appropriate caution.
+NewtonSwarm is experimental software in active development. All features, tools, and capabilities should be considered experimental and used with appropriate caution.
 
-By using AlphaSwarm, you acknowledge and agree that:
+By using NewtonSwarm, you acknowledge and agree that:
 
 1. **Experimental Nature**: The software utilizes experimental technologies, including Large Language Models (LLMs), which are inherently non-deterministic and may produce unpredictable results.
 

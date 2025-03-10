@@ -1,7 +1,7 @@
 import pytest
 
-from alphaswarm.services.cookiefun.cookiefun_client import CookieFunClient, Interval
-from alphaswarm.tools.cookie.cookie_metrics import (
+from newtonswarm.services.cookiefun.cookiefun_client import CookieFunClient, Interval
+from newtonswarm.tools.cookie.cookie_metrics import (
     GetCookieMetricsByTwitter,
     GetCookieMetricsByContract,
     GetCookieMetricsBySymbol,

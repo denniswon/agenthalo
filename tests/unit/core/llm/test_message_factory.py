@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from alphaswarm.core.llm import CacheControl, ImageURL, Message, TextContentBlock
+from newtonswarm.core.llm import CacheControl, ImageURL, Message, TextContentBlock
 from tests import get_data_filename
 
 

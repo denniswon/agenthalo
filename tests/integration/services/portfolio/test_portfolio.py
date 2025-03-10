@@ -1,11 +1,11 @@
 import pytest
 
-from alphaswarm.config import ChainConfig, Config, WalletInfo
-from alphaswarm.services.alchemy import AlchemyClient
-from alphaswarm.services.chains import EVMClient
-from alphaswarm.services.portfolio import Portfolio
-from alphaswarm.services.portfolio.portfolio_evm import PortfolioEvm
-from alphaswarm.services.portfolio.portfolio_base import PortfolioBase
+from newtonswarm.config import ChainConfig, Config, WalletInfo
+from newtonswarm.services.alchemy import AlchemyClient
+from newtonswarm.services.chains import EVMClient
+from newtonswarm.services.portfolio import Portfolio
+from newtonswarm.services.portfolio.portfolio_evm import PortfolioEvm
+from newtonswarm.services.portfolio.portfolio_base import PortfolioBase
 
 
 @pytest.fixture

@@ -2,16 +2,16 @@ import asyncio
 from typing import List
 
 import dotenv
-from alphaswarm.agent.agent import AlphaSwarmAgent
-from alphaswarm.agent.clients import TerminalClient
-from alphaswarm.config import Config
-from alphaswarm.core.tool import AlphaSwarmToolBase
-from alphaswarm.tools.alchemy import GetAlchemyPriceHistoryBySymbol
-from alphaswarm.tools.cookie.cookie_metrics import GetCookieMetricsBySymbol, GetCookieMetricsPaged
-from alphaswarm.tools.forecasting import ForecastTokenPrice
+from newtonswarm.agent.agent import NewtonSwarmAgent
+from newtonswarm.agent.clients import TerminalClient
+from newtonswarm.config import Config
+from newtonswarm.core.tool import NewtonSwarmToolBase
+from newtonswarm.tools.alchemy import GetAlchemyPriceHistoryBySymbol
+from newtonswarm.tools.cookie.cookie_metrics import GetCookieMetricsBySymbol, GetCookieMetricsPaged
+from newtonswarm.tools.forecasting import ForecastTokenPrice
 
 
-class ForecastingAgent(AlphaSwarmAgent):
+class ForecastingAgent(NewtonSwarmAgent):
     """
     This example demonstrates a forecasting agent that uses the `ForecastTokenPrice` to forecast the price of a token.
     The agent and the tool are both experimental. Neither have been validated for accuracy -- these are meant to serve
@@ -23,7 +23,7 @@ class ForecastingAgent(AlphaSwarmAgent):
     """
 
     def __init__(self, model_id: str) -> None:
-        tools: List[AlphaSwarmToolBase] = [
+        tools: List[NewtonSwarmToolBase] = [
             GetAlchemyPriceHistoryBySymbol(),
             GetCookieMetricsBySymbol(),
             GetCookieMetricsPaged(),
@@ -48,7 +48,7 @@ async def main() -> None:
 
     agent = ForecastingAgent(model_id=llm_config.model_id)
 
-    terminal = TerminalClient("AlphaSwarm terminal", agent)
+    terminal = TerminalClient("NewtonSwarm terminal", agent)
     await asyncio.gather(
         terminal.start(),
     )

@@ -3,7 +3,7 @@ import os
 import dotenv
 from _pytest.fixtures import fixture
 
-from alphaswarm.config import Config
+from newtonswarm.config import Config
 
 
 @fixture

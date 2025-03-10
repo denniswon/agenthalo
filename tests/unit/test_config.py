@@ -5,8 +5,8 @@ from typing import List, Optional
 import pytest
 from web3.types import Wei
 
-from alphaswarm.config import Config
-from alphaswarm.core.token import TokenInfo
+from newtonswarm.config import Config
+from newtonswarm.core.token import TokenInfo
 
 
 @pytest.fixture

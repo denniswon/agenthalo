@@ -3,8 +3,8 @@ from typing import List, Tuple, Union
 
 import pytest
 
-from alphaswarm.core.token import TokenAmount, TokenInfo
-from alphaswarm.services.portfolio import PnlMode, PortfolioPNL, PortfolioPNLDetail, PortfolioSwap
+from newtonswarm.core.token import TokenAmount, TokenInfo
+from newtonswarm.services.portfolio import PnlMode, PortfolioPNL, PortfolioPNLDetail, PortfolioSwap
 
 
 def create_swaps(
