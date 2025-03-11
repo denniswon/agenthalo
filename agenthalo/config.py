@@ -272,6 +272,7 @@ class Config:
             }
 
         account_info = asyncio.run(chain_account_info(chain))
+        logger.debug(f"Account info for {chain}: {account_info}")
 
         values["wallet_address"] = account_info[0]
         values["private_key"] = account_info[1]

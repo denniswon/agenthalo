@@ -16,11 +16,11 @@ help:
 
 # Install dependencies
 install:
-	poetry run install
+	poetry install
 
 # Install depedencies including dev dependencies
 dev-install:
-	poetry run install --with dev 
+	poetry install --with dev
 
 # Run FastAPI server
 start:
