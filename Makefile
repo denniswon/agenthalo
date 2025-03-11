@@ -14,6 +14,22 @@ help:
 	@echo "  unit-tests        - Run all unit tests"
 	@echo "  all-tests         - Run all tests"
 
+# Install dependencies
+install:
+	poetry run install
+
+# Install depedencies including dev dependencies
+dev-install:
+	poetry run install --with dev 
+
+# Run FastAPI server
+start:
+	poetry run python -m fastapi
+
+# Run FastAPI server in watch mode
+dev:
+	poetry run python -m fastapi dev
+
 # Code formatting and linting
 format:
 	poetry run black .

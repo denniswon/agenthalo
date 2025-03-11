@@ -1,77 +1,57 @@
 # AgentHalo
 
-AgentHalo is a starter kit for building LLM-powered AI agents that interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
+AgentHalo is a collection of LLM-powered AI agents running inside TEE (Intel TDX) for Private, Verifiable AI.
+
+AgentHalo can interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
+
+All operations can be cryptographically verified using TEE remote attestation off-chain, and on-chain as well via zero knowledge proof of the attestation for every operation happening inside the TEE.
+
+For more information on on-chain verification of TEE remote attestation, please refer to [TEE Remote Attestation On-chain Verification](https://magiclabs.notion.site/TEE-Remote-Attestation-On-chain-Verification-1aead65b2b7080b0876bfdbb11634e78?pvs=4)
 
 ## Features
 
 ### AI-Powered Trading with Agents
 
-- 🤖 LLM-powered agents capable of processing complex, unstructured signals for trading decisions
-- 🧠 Intelligent tool selection and chaining for complex multi-step analysis
-- 🚀 Dynamic composition and execution of Python code using available tools
-- 💬 Natural language strategy definition and real-time reasoning
-- 📊 Iterative agentic reasoning to evaluate market conditions, weigh multiple input signals, and make trading decisions given input trading strategy
+- LLM-powered agents capable of processing complex, unstructured signals for trading decisions
+- Intelligent tool selection and chaining for complex multi-step analysis
+- Dynamic composition and execution of Python code using available tools
+- Natural language strategy definition and real-time reasoning
+- Iterative agentic reasoning to evaluate market conditions, weigh multiple input signals, and make trading decisions given input trading strategy
 
 ### Trading & Execution
 
-- ⚡ Real-time strategy execution and monitoring
-- 🔔 Flexible execution modes:
+- Real-time strategy execution and monitoring
+- Execution modes:
   - Automated trading alerts via Telegram
   - Autonomous trade execution
-- 🔄 Multi-chain support with growing DEX integrations:
-  - Ethereum, Base, Coming Soon: Solana
-  - Uniswap V2/V3, Coming Soon: Jupiter
-
-### Modular Architecture
-
-- 🛠️ Extensible plugin system for:
-  - Data sources and signals
-  - Trading strategies
-  - Agent tools and capabilities
-  - DEX integrations
-  - On-chain data providers
-- 🔌 Easy integration of new data sources and execution venues
+- Multi-chain support with DEX integrations (Uniswap, Jupiter)
 
 ## Prerequisites
 
 - Python 3.11 or higher
-  - Download and install Python from [here](https://www.python.org/downloads/)
-  - Verify installation with `python --version`
-- [Poetry](https://python-poetry.org/docs/) 2.1 or higher  (package manager)
-  - Install Poetry with `pipx install poetry`
-  - Verify installation with `poetry --version`
-- Basic understanding of crypto trading concepts
+  - Download and install Python
+- [Poetry](https://python-poetry.org/docs/) 2.1 or higher
 
 ## Getting Started
-
-### 1. Installation
-
-First, ensure you have all prerequisites installed, including Python and poetry.
-
-Then follow these steps:
-
-1. Clone the repository:
 
 ```bash
 git clone https://github.com/denniswon/agenthalo.git
 cd agenthalo
 ```
 
-2. Install dependencies:
+### 1. Installation
 
 ```bash
 # For basic installation
-poetry install
+make install
 
-# For development (includes testing tools)
-poetry install --with dev
+# For development (includes dev dependencies)
+make dev-install
 ```
 
-Note: Poetry manages its own virtual environments, so a separate virtual environment should not be required. Refer to the [Poetry documentation](https://python-poetry.org/docs/managing-environments/) for more information.
+Note: Poetry manages its own virtual environments, so a separate virtual environment should not be required.
 
 ### 2. API Keys Setup
-
-Before running the framework, you'll need to obtain several API keys:
 
 1. **LLM API Key**:
 
@@ -81,36 +61,29 @@ Before running the framework, you'll need to obtain several API keys:
 
 2. **Blockchain Access**:
 
-   - [Alchemy API Key](https://www.alchemy.com/) (required for blockchain data)
-   - RPC URLs from [Alchemy](https://www.alchemy.com/) or [Infura](https://www.infura.io/) or another RPC provider of choice
+   - [Alchemy API Key](https://www.alchemy.com/) for blockchain data, or another RPC provider of choice
 
-3. **Optional - Telegram Bot** (for notifications):
-   - Create a bot through [BotFather](https://t.me/botfather) with `/newbot` and securely save the bot token
-   - To get chat ID, run `examples/telegram_bot.py` and message `/start` or `/id` to your bot
+3. **Optional - Telegram Bot** for notifications:
+   - Create a bot through [BotFather](https://t.me/botfather) with `/newbot` and securely save the chat id and the bot token
 
 ### 3. Environment Configuration
-
-1. Create your environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-2. Configure the required variables in your `.env` file.
-
-#### Required environment variables:
+#### Required environment variables
 
 LLM Configuration (at least one required):
 
 - `ANTHROPIC_API_KEY`: Your Anthropic API key if using Claude models (default)
 - `OPENAI_API_KEY`: Your OpenAI API key if using GPT models
-- For any other provider ensure to follow the same pattern
 
 Blockchain Access:
 
 - `ALCHEMY_API_KEY`: Your Alchemy API key for accessing blockchain data
 
-#### Optional configurations:
+#### Optional configurations
 
 Notification settings:
 
@@ -124,32 +97,9 @@ Logging configuration:
 - `LOG_LEVEL`: Sets logging verbosity level (defaults to INFO)
 - `LOG_FORMAT`: Custom format for log messages (default: "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-#### Security Notes
-
-- Never commit your `.env` file to version control
-- Keep private keys secure and start with testnets
-- Use separate API keys for development and production
-- Consider using key rotation for production deployments
-
-### 4. Additional Configuration
-
-The framework uses YAML configuration files to define trading venues, token pairs, and other application-specific and trading-related settings. The main configuration file is `config/default.yaml`.
-
-Key configuration sections:
-
-- **Network Environments**: Production and test network configurations
-- **Trading Venues**: Supported DEXs with their supported pairs and settings for each chain
-- **Chain Configuration**:
-  - Chain-specific wallet and RPC settings
-  - Token addresses and decimals
-  - Gas settings and transaction parameters
-- **Telegram**: Bot configuration for notifications
-
-Note: Always verify contract addresses from official sources.
-
 ## Run
 
-We also need to download the DStack simulator:
+We also need to download the [DStack](https://github.com/Dstack-TEE/dstack) simulator:
 
 ```shell
 # Mac
@@ -209,39 +159,3 @@ or use Makefile shortcuts:
 ```bash
 make dev-lint
 ```
-
-## Disclaimer
-
-**IMPORTANT LEGAL NOTICE AND RISK DISCLOSURE**
-
-AgentHalo is experimental software in active development. All features, tools, and capabilities should be considered experimental and used with appropriate caution.
-
-By using AgentHalo, you acknowledge and agree that:
-
-1. **Experimental Nature**: The software utilizes experimental technologies, including Large Language Models (LLMs), which are inherently non-deterministic and may produce unpredictable results.
-
-2. **Financial Risk**: Any trading or investment activities carry significant risk. Crypto markets are highly volatile and trading decisions, whether manual or automated, can result in partial or complete loss of funds.
-
-3. **No Financial Advice**: Nothing in this software constitutes financial, investment, legal, or tax advice. All trading strategies, examples, and code snippets are for illustrative purposes only.
-
-4. **User Responsibility**: Users are solely responsible for:
-
-   - Understanding the risks involved
-   - Conducting their own due diligence
-   - Securing their private keys and funds
-   - Testing thoroughly on testnets before using real funds
-   - Setting appropriate risk management parameters
-
-5. **No Warranty**: The software is provided "AS IS", without warranty of any kind, express or implied. The developers and contributors:
-
-   - Make no representations about its suitability for any purpose
-   - Take no responsibility for any financial losses incurred
-   - Do not guarantee the accuracy or reliability of any trading signals or decisions
-
-6. **Limitation of Liability**: Under no circumstances shall the developers, contributors, or associated entities be liable for any direct, indirect, incidental, special, exemplary, or consequential damages arising from the use of this software.
-
-USE OF THIS SOFTWARE FOR TRADING WITH REAL FUNDS SHOULD ONLY BE DONE WITH EXTREME CAUTION AND AFTER THOROUGHLY UNDERSTANDING THE RISKS AND LIMITATIONS INVOLVED.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
