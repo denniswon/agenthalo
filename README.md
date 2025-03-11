@@ -1,6 +1,6 @@
-# NewtonSwarm
+# AgentHalo
 
-NewtonSwarm is a starter kit for building LLM-powered AI agents that interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
+AgentHalo is a starter kit for building LLM-powered AI agents that interpret natural language trading strategies, analyze real-time market signals, and autonomously execute trades across multiple chains.
 
 ## Features
 
@@ -53,8 +53,8 @@ Then follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/chain-ml/newtonswarm.git
-cd newtonswarm
+git clone https://github.com/denniswon/agenthalo.git
+cd agenthalo
 ```
 
 2. Install dependencies:
@@ -214,9 +214,9 @@ make dev-lint
 
 **IMPORTANT LEGAL NOTICE AND RISK DISCLOSURE**
 
-NewtonSwarm is experimental software in active development. All features, tools, and capabilities should be considered experimental and used with appropriate caution.
+AgentHalo is experimental software in active development. All features, tools, and capabilities should be considered experimental and used with appropriate caution.
 
-By using NewtonSwarm, you acknowledge and agree that:
+By using AgentHalo, you acknowledge and agree that:
 
 1. **Experimental Nature**: The software utilizes experimental technologies, including Large Language Models (LLMs), which are inherently non-deterministic and may produce unpredictable results.
 

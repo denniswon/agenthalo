@@ -1,7 +1,7 @@
 import pytest
 
-from newtonswarm.config import Config
-from newtonswarm.tools.core import GetTokenAddress
+from agenthalo.config import Config
+from agenthalo.tools.core import GetTokenAddress
 
 
 @pytest.fixture

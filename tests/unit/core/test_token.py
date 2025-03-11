@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 from web3.types import Wei
 
-from newtonswarm.core.token import BaseUnit, TokenAmount, TokenInfo
+from agenthalo.core.token import BaseUnit, TokenAmount, TokenInfo
 
 
 @pytest.fixture

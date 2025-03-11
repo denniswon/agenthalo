@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 from pydantic import BaseModel
 
-from newtonswarm.core.llm import LLMFunctionTemplated
+from agenthalo.core.llm import LLMFunctionTemplated
 
 
 class Response(BaseModel):

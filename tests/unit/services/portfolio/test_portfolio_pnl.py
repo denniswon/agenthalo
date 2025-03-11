@@ -3,8 +3,8 @@ from typing import List, Tuple, Union
 
 import pytest
 
-from newtonswarm.core.token import TokenAmount, TokenInfo
-from newtonswarm.services.portfolio import PnlMode, PortfolioPNL, PortfolioPNLDetail, PortfolioSwap
+from agenthalo.core.token import TokenAmount, TokenInfo
+from agenthalo.services.portfolio import PnlMode, PortfolioPNL, PortfolioPNLDetail, PortfolioSwap
 
 
 def create_swaps(

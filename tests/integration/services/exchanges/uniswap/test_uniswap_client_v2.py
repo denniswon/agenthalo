@@ -2,9 +2,9 @@ from decimal import Decimal
 
 import pytest
 
-from newtonswarm.config import Config
-from newtonswarm.services.exchanges import DEXFactory
-from newtonswarm.services.exchanges.uniswap import UniswapClientV2
+from agenthalo.config import Config
+from agenthalo.services.exchanges import DEXFactory
+from agenthalo.services.exchanges.uniswap import UniswapClientV2
 
 
 def test_get_markets_for_tokens_v2(default_config: Config) -> None:

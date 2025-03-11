@@ -1,8 +1,8 @@
 import pytest
 from eth_typing import ChecksumAddress
 
-from newtonswarm.config import Config
-from newtonswarm.services.chains import EVMClient
+from agenthalo.config import Config
+from agenthalo.services.chains import EVMClient
 
 
 @pytest.fixture

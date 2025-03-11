@@ -8,14 +8,14 @@ from decimal import Decimal
 from typing import List, Sequence
 
 import dotenv
-from newtonswarm.agent.agent import NewtonSwarmAgent
-from newtonswarm.agent.clients import CronJobClient
-from newtonswarm.config import Config
-from newtonswarm.services.alchemy import AlchemyClient
-from newtonswarm.services.portfolio import Portfolio
-from newtonswarm.tools.alchemy import GetAlchemyPriceHistoryByAddress
-from newtonswarm.tools.core import GetTokenAddress
-from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.clients import CronJobClient
+from agenthalo.config import Config
+from agenthalo.services.alchemy import AlchemyClient
+from agenthalo.services.portfolio import Portfolio
+from agenthalo.tools.alchemy import GetAlchemyPriceHistoryByAddress
+from agenthalo.tools.core import GetTokenAddress
+from agenthalo.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
 
 
 @dataclass
@@ -49,10 +49,10 @@ class PriceChanges:
         )
 
 
-class PriceMomentumCronAgent(NewtonSwarmAgent):
+class PriceMomentumCronAgent(AgentHaloAgent):
     """
     A portfolio-aware momentum trading agent that combines deterministic analysis
-    with NewtonSwarm reasoning and tools for position sizing and trade execution.
+    with AgentHalo reasoning and tools for position sizing and trade execution.
     A `cron` task will continually monitor price changes and determine whether momentum criteria are met.
     If momentum criteria are met, a trading task will be generated for the agent to execute.
     """

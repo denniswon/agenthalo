@@ -1,6 +1,6 @@
 import pytest
 
-from newtonswarm.services.chains.solana.jupiter_client import JupiterClient
+from agenthalo.services.chains.solana.jupiter_client import JupiterClient
 
 
 @pytest.fixture

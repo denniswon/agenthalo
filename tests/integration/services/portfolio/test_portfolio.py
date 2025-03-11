@@ -1,11 +1,11 @@
 import pytest
 
-from newtonswarm.config import ChainConfig, Config, WalletInfo
-from newtonswarm.services.alchemy import AlchemyClient
-from newtonswarm.services.chains import EVMClient
-from newtonswarm.services.portfolio import Portfolio
-from newtonswarm.services.portfolio.portfolio_evm import PortfolioEvm
-from newtonswarm.services.portfolio.portfolio_base import PortfolioBase
+from agenthalo.config import ChainConfig, Config, WalletInfo
+from agenthalo.services.alchemy import AlchemyClient
+from agenthalo.services.chains import EVMClient
+from agenthalo.services.portfolio import Portfolio
+from agenthalo.services.portfolio.portfolio_evm import PortfolioEvm
+from agenthalo.services.portfolio.portfolio_base import PortfolioBase
 
 
 @pytest.fixture

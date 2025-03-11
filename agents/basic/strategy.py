@@ -1,12 +1,12 @@
 from typing import List
 
 import dotenv
-from newtonswarm.agent import NewtonSwarmAgent
-from newtonswarm.config import Config
-from newtonswarm.core.tool import NewtonSwarmToolBase
-from newtonswarm.tools.core import GetTokenAddress
-from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
-from newtonswarm.tools.strategy_analysis import AnalyzeTradingStrategy, Strategy
+from agenthalo.agent import AgentHaloAgent
+from agenthalo.config import Config
+from agenthalo.core.tool import AgentHaloToolBase
+from agenthalo.tools.core import GetTokenAddress
+from agenthalo.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from agenthalo.tools.strategy_analysis import AnalyzeTradingStrategy, Strategy
 
 dotenv.load_dotenv()
 config = Config(network_env="test")  # Use a testnet environment (as defined in config/default.yaml)
@@ -18,7 +18,7 @@ strategy = Strategy(
     model_id=llm_config.model_id,
 )
 
-tools: List[NewtonSwarmToolBase] = [
+tools: List[AgentHaloToolBase] = [
     GetTokenAddress(config),  # Get token address from a symbol
     GetTokenPrice(config),  # Get the price of a token pair from available DEXes given addresses
     AnalyzeTradingStrategy(strategy),  # Check a trading strategy
@@ -26,7 +26,7 @@ tools: List[NewtonSwarmToolBase] = [
 ]
 
 # Create the agent
-agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id)
+agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
 
 # Interact with the agent
 async def _strategy_trade(query: str) -> str:

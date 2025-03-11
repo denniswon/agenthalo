@@ -1,5 +1,5 @@
-from newtonswarm.config import Config
-from newtonswarm.services.chains import EVMClient
+from agenthalo.config import Config
+from agenthalo.services.chains import EVMClient
 
 
 def test_get_token_info(default_config: Config) -> None:

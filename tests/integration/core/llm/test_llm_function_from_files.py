@@ -4,7 +4,7 @@ from typing import Any
 import dotenv
 from pydantic import BaseModel, Field
 
-from newtonswarm.core.llm import LLMFunctionTemplated
+from agenthalo.core.llm import LLMFunctionTemplated
 
 dotenv.load_dotenv()
 

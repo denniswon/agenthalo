@@ -1,7 +1,7 @@
 import pytest
 
-from newtonswarm.services.cookiefun.cookiefun_client import CookieFunClient, Interval
-from newtonswarm.tools.cookie.cookie_metrics import (
+from agenthalo.services.cookiefun.cookiefun_client import CookieFunClient, Interval
+from agenthalo.tools.cookie.cookie_metrics import (
     GetCookieMetricsByTwitter,
     GetCookieMetricsByContract,
     GetCookieMetricsBySymbol,

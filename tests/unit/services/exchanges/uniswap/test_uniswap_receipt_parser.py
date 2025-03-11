@@ -6,9 +6,9 @@ from hexbytes import HexBytes
 from web3 import Web3
 from web3.types import TxReceipt, Wei
 
-from newtonswarm.services.chains import EVMClient
-from newtonswarm.services.chains.evm import ZERO_ADDRESS
-from newtonswarm.services.exchanges.uniswap import UniswapClientV3
+from agenthalo.services.chains import EVMClient
+from agenthalo.services.chains.evm import ZERO_ADDRESS
+from agenthalo.services.exchanges.uniswap import UniswapClientV3
 
 
 @pytest.fixture

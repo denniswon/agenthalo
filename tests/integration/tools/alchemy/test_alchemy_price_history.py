@@ -1,5 +1,5 @@
-from newtonswarm.services.alchemy import AlchemyClient
-from newtonswarm.tools.alchemy.alchemy_price_history import (
+from agenthalo.services.alchemy import AlchemyClient
+from agenthalo.tools.alchemy.alchemy_price_history import (
     GetAlchemyPriceHistoryBySymbol,
     GetAlchemyPriceHistoryByAddress,
 )

@@ -2,10 +2,10 @@ from decimal import Decimal
 
 import pytest
 
-from newtonswarm.config import Config
-from newtonswarm.services.chains import EVMClient
-from newtonswarm.tools.core import GetTokenAddress
-from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from agenthalo.config import Config
+from agenthalo.services.chains import EVMClient
+from agenthalo.tools.core import GetTokenAddress
+from agenthalo.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
 
 
 @pytest.fixture

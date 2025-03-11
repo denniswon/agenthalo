@@ -1,6 +1,6 @@
 import pytest
 
-from newtonswarm.core.llm import LLMFunction, Message
+from agenthalo.core.llm import LLMFunction, Message
 
 
 def test_validate_messages_str_only() -> None:

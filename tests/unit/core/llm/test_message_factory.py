@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from newtonswarm.core.llm import CacheControl, ImageURL, Message, TextContentBlock
+from agenthalo.core.llm import CacheControl, ImageURL, Message, TextContentBlock
 from tests import get_data_filename
 
 

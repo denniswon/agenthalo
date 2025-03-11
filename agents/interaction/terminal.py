@@ -3,24 +3,24 @@ import json
 from typing import List, Mapping
 
 import dotenv
-from newtonswarm.agent.agent import NewtonSwarmAgent
-from newtonswarm.agent.clients import TerminalClient
-from newtonswarm.config import CONFIG_PATH, Config
-from newtonswarm.core.tool import NewtonSwarmToolBase
-from newtonswarm.tools.alchemy import GetAlchemyPriceHistoryByAddress, GetAlchemyPriceHistoryBySymbol
-from newtonswarm.tools.cookie import (
+from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.clients import TerminalClient
+from agenthalo.config import CONFIG_PATH, Config
+from agenthalo.core.tool import AgentHaloToolBase
+from agenthalo.tools.alchemy import GetAlchemyPriceHistoryByAddress, GetAlchemyPriceHistoryBySymbol
+from agenthalo.tools.cookie import (
     GetCookieMetricsByContract,
     GetCookieMetricsBySymbol,
     GetCookieMetricsByTwitter,
     GetCookieMetricsPaged,
 )
-from newtonswarm.tools.core import GetTokenAddress, GetUsdPrice
-from newtonswarm.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
-from newtonswarm.tools.portfolio import GetPortfolioBalance
-from newtonswarm.tools.strategy_analysis.generic import AnalyzeTradingStrategy
-from newtonswarm.tools.strategy_analysis.strategy import Strategy
-from newtonswarm.tools.telegram import SendTelegramNotification
-from newtonswarm.utils import read_text_file_to_string
+from agenthalo.tools.core import GetTokenAddress, GetUsdPrice
+from agenthalo.tools.exchanges import ExecuteTokenSwap, GetTokenPrice
+from agenthalo.tools.portfolio import GetPortfolioBalance
+from agenthalo.tools.strategy_analysis.generic import AnalyzeTradingStrategy
+from agenthalo.tools.strategy_analysis.strategy import Strategy
+from agenthalo.tools.telegram import SendTelegramNotification
+from agenthalo.utils import read_text_file_to_string
 
 
 async def main() -> None:
@@ -33,7 +33,7 @@ async def main() -> None:
 
     strategy = Strategy.from_file(filename=str(CONFIG_PATH / "momentum_strategy_config.md"))
 
-    tools: List[NewtonSwarmToolBase] = [
+    tools: List[AgentHaloToolBase] = [
         GetUsdPrice(),
         GetTokenAddress(config),
         GetTokenPrice(config),
@@ -66,9 +66,9 @@ async def main() -> None:
     hints = read_text_file_to_string(CONFIG_PATH / "trading_strategy_agent_hints.txt")
 
     llm_config = config.get_default_llm_config("anthropic")
-    agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
+    agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
 
-    terminal = TerminalClient("NewtonSwarm terminal", agent)
+    terminal = TerminalClient("AgentHalo terminal", agent)
     await asyncio.gather(
         terminal.start(),
     )

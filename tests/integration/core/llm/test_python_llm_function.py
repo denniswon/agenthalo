@@ -2,7 +2,7 @@ from typing import List
 
 import dotenv
 from pydantic import BaseModel
-from newtonswarm.core.llm.llm_function import PythonLLMFunction, LLMFunctionInput
+from agenthalo.core.llm.llm_function import PythonLLMFunction, LLMFunctionInput
 
 dotenv.load_dotenv()
 

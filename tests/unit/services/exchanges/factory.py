@@ -3,9 +3,9 @@ from typing import List, Tuple
 
 import pytest
 
-from newtonswarm.config import Config, TokenInfo, ChainConfig
-from newtonswarm.core.token import TokenAmount
-from newtonswarm.services.exchanges import DEXClient, DEXFactory, QuoteResult, SwapResult
+from agenthalo.config import Config, TokenInfo, ChainConfig
+from agenthalo.core.token import TokenAmount
+from agenthalo.services.exchanges import DEXClient, DEXFactory, QuoteResult, SwapResult
 
 
 class MockDex(DEXClient[str]):

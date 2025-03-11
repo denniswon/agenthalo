@@ -1,6 +1,6 @@
 services:
   app:
-    image: jhwon0820/newtonswarm:latest
+    image: jhwon0820/agenthalo:latest
     container_name: app
     ports:
       - "8000:8000"

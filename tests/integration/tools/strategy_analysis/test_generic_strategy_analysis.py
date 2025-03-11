@@ -1,6 +1,6 @@
 import json
-from newtonswarm.tools.strategy_analysis.generic.generic_analysis import AnalyzeTradingStrategy
-from newtonswarm.tools.strategy_analysis.strategy import Strategy
+from agenthalo.tools.strategy_analysis.generic.generic_analysis import AnalyzeTradingStrategy
+from agenthalo.tools.strategy_analysis.strategy import Strategy
 
 
 def test_generic_strategy_analysis() -> None:

@@ -1,5 +1,5 @@
-from newtonswarm.services.chains.evm import ZERO_CHECKSUM_ADDRESS
-from newtonswarm.services.exchanges.uniswap.uniswap_client_v3 import ExactInputSingleParams
+from agenthalo.services.chains.evm import ZERO_CHECKSUM_ADDRESS
+from agenthalo.services.exchanges.uniswap.uniswap_client_v3 import ExactInputSingleParams
 
 
 def test_v3_router_contract() -> None:

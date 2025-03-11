@@ -1,8 +1,8 @@
 import pytest
 
-from newtonswarm.config import Config
-from newtonswarm.services.chains import SolanaClient
-from newtonswarm.services.helius.helius_client import HeliusClient
+from agenthalo.config import Config
+from agenthalo.services.chains import SolanaClient
+from agenthalo.services.helius.helius_client import HeliusClient
 
 
 @pytest.fixture

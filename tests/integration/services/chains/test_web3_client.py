@@ -1,5 +1,5 @@
-from newtonswarm.services.chains import SolanaClient
-from newtonswarm.config import Config
+from agenthalo.services.chains import SolanaClient
+from agenthalo.config import Config
 
 
 def test_get_solana_balance(default_config: Config) -> None:

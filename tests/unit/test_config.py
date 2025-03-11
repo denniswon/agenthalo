@@ -5,8 +5,8 @@ from typing import List, Optional
 import pytest
 from web3.types import Wei
 
-from newtonswarm.config import Config
-from newtonswarm.core.token import TokenInfo
+from agenthalo.config import Config
+from agenthalo.core.token import TokenInfo
 
 
 @pytest.fixture

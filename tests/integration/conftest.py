@@ -2,9 +2,9 @@ import time
 from _pytest.fixtures import fixture
 import pytest
 
-from newtonswarm.config import Config
-from newtonswarm.services.alchemy import AlchemyClient
-from newtonswarm.services.cookiefun import CookieFunClient
+from agenthalo.config import Config
+from agenthalo.services.alchemy import AlchemyClient
+from agenthalo.services.cookiefun import CookieFunClient
 from tests.unit.conftest import default_config
 
 __all__ = ["default_config"]

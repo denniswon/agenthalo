@@ -1,6 +1,6 @@
 import pytest
 from decimal import Decimal
-from newtonswarm.services.exchanges.base import Slippage
+from agenthalo.services.exchanges.base import Slippage
 
 
 def test_slippage_init_valid() -> None:

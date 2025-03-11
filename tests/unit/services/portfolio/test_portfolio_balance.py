@@ -4,8 +4,8 @@ from unittest.mock import patch
 
 import pytest
 
-from newtonswarm.core.token import TokenAmount, TokenInfo
-from newtonswarm.services.portfolio.portfolio import PortfolioBalance
+from agenthalo.core.token import TokenAmount, TokenInfo
+from agenthalo.services.portfolio.portfolio import PortfolioBalance
 
 
 @pytest.fixture
@@ -51,7 +51,7 @@ def test_timestamp_is_set_on_init(portfolio_balance: PortfolioBalance) -> None:
 
 
 def test_age_seconds(portfolio_balance: PortfolioBalance) -> None:
-    with patch("newtonswarm.services.portfolio.portfolio.datetime") as mock_datetime:
+    with patch("agenthalo.services.portfolio.portfolio.datetime") as mock_datetime:
         creation_time = datetime(2024, 1, 1, tzinfo=UTC)
         current_time = creation_time + timedelta(seconds=30)
 

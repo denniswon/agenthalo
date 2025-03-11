@@ -1,8 +1,8 @@
 import pytest
 from solders.pubkey import Pubkey
 
-from newtonswarm.config import ChainConfig, Config
-from newtonswarm.services.chains.solana import SolSigner, SolanaClient
+from agenthalo.config import ChainConfig, Config
+from agenthalo.services.chains.solana import SolSigner, SolanaClient
 
 
 @pytest.fixture

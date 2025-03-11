@@ -2,8 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from newtonswarm.config import ChainConfig, Config
-from newtonswarm.services.alchemy.alchemy_client import AlchemyClient
+from agenthalo.config import ChainConfig, Config
+from agenthalo.services.alchemy.alchemy_client import AlchemyClient
 
 main_net_chains = ["ethereum", "base"]
 test_net_chains = ["ethereum_sepolia", "base_sepolia"]

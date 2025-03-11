@@ -5,7 +5,7 @@ import dotenv
 import requests
 from litellm.types.utils import Usage
 
-from newtonswarm.core.llm import ImageURL, LLMFunction, Message
+from agenthalo.core.llm import ImageURL, LLMFunction, Message
 from pydantic import BaseModel, Field
 from tests import get_data_filename
 

@@ -22,14 +22,14 @@ format:
 dev-lint: format
 	poetry run mypy . || true
 	poetry run ruff check . --fix || true
-#	poetry pylint newtonswarm/. --max-line-length 120 --disable=R,C,I  --fail-under=9
+#	poetry pylint agenthalo/. --max-line-length 120 --disable=R,C,I  --fail-under=9
 
 lint:
 	poetry run black . --check
 	poetry run isort . --check-only
 	poetry run mypy .
 	poetry run ruff check .
-#	poetry pylint newtonswarm/. --max-line-length 120 --disable=R,C,I,E0401,W1203,W0107 --fail-under=9
+#	poetry pylint agenthalo/. --max-line-length 120 --disable=R,C,I,E0401,W1203,W0107 --fail-under=9
 
 # Testing
 integration-tests:
@@ -41,5 +41,5 @@ unit-tests:
 all-tests: unit-tests integration-tests
 
 ci-all-tests:
-	poetry run pytest tests/unit tests/integration --cov=newtonswarm --cov-report=html:reports/coverage \
+	poetry run pytest tests/unit tests/integration --cov=agenthalo --cov-report=html:reports/coverage \
 		--html=reports/pytest-report.html --self-contained-html

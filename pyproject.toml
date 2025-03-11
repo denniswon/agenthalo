@@ -1,5 +1,5 @@
 [project]
-name = "newtonswarm"
+name = "agenthalo"
 version = "0.1.0"
 description = ""
 authors = [
@@ -104,7 +104,7 @@ disallow_untyped_defs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = ["smolagents.*", "theoriq.*", "eth_defi.*"]
+module = ["smolagents.*", "eth_defi.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

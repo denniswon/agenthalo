@@ -2,24 +2,24 @@ from typing import Tuple
 
 import pytest
 from pydantic import BaseModel, Field
-from newtonswarm.core.tool import NewtonSwarmToolBase
+from agenthalo.core.tool import AgentHaloToolBase
 from smolagents import Tool
 
-from newtonswarm.core.tool.tool import NewtonSwarmToSmolAgentsToolAdapter
+from agenthalo.core.tool.tool import AgentHaloToSmolAgentsToolAdapter
 
 
-def newtonswarm_tool_and_smolagents_tool(tool: NewtonSwarmToolBase) -> Tuple[NewtonSwarmToolBase, Tool]:
-    return tool, NewtonSwarmToSmolAgentsToolAdapter.adapt(tool)
+def agenthalo_tool_and_smolagents_tool(tool: AgentHaloToolBase) -> Tuple[AgentHaloToolBase, Tool]:
+    return tool, AgentHaloToSmolAgentsToolAdapter.adapt(tool)
 
 
 def test_base() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my tool description"""
 
         def forward(self) -> None:
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     assert tool.name == smolagents_tool.name == "MyTool"
     assert tool.description == smolagents_tool.description == "This is my tool description"
     assert tool.output_type is type(None)
@@ -27,7 +27,7 @@ def test_base() -> None:
 
 
 def test_multiline_description() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """
         This is my multiline
         tool description
@@ -36,7 +36,7 @@ def test_multiline_description() -> None:
         def forward(self) -> str:
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     assert tool.name == smolagents_tool.name == "MyTool"
     assert tool.description == smolagents_tool.description == "This is my multiline\ntool description"
     assert tool.output_type is str
@@ -46,7 +46,7 @@ def test_multiline_description() -> None:
 def test_missing_description() -> None:
     with pytest.raises(ValueError) as e:
 
-        class MyTool(NewtonSwarmToolBase):
+        class MyTool(AgentHaloToolBase):
             def forward(self) -> None:
                 raise NotImplementedError
 
@@ -54,7 +54,7 @@ def test_missing_description() -> None:
 
 
 def test_override() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my tool description"""
 
         name = "MyTool2"
@@ -64,7 +64,7 @@ def test_override() -> None:
         def forward(self) -> None:
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     assert tool.name == smolagents_tool.name == "MyTool2"
     assert tool.description == smolagents_tool.description == "This is my tool description v2"
     assert tool.output_type is int
@@ -76,13 +76,13 @@ def test_output_type_base_model() -> None:
         name: str = Field(..., description="The name of the person")
         age: int = Field(..., description="The age of the person")
 
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my BaseModel tool description"""
 
         def forward(self) -> MyModel:
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     for t in [tool, smolagents_tool]:
         assert t.description.startswith("This is my BaseModel tool description")
         assert "Returns a MyModel object with the following schema:" in t.description
@@ -94,7 +94,7 @@ def test_output_type_base_model() -> None:
 
 
 def test_with_examples() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my tool description"""
 
         examples = ["Examples:", "- Example 1", "- Example 2"]
@@ -102,7 +102,7 @@ def test_with_examples() -> None:
         def forward(self) -> float:
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     for t in [tool, smolagents_tool]:
         assert t.description.startswith("This is my tool description")
         for example in MyTool.examples:
@@ -115,7 +115,7 @@ def test_with_examples() -> None:
 def test_incorrect_inputs_descriptions() -> None:
     with pytest.raises(ValueError) as e:
 
-        class MyTool(NewtonSwarmToolBase):
+        class MyTool(AgentHaloToolBase):
             """This is my tool description"""
 
             def forward(self, a: str, b) -> None:  # type: ignore
@@ -125,7 +125,7 @@ def test_incorrect_inputs_descriptions() -> None:
 
     with pytest.raises(ValueError) as e:
 
-        class MyTool_v2(NewtonSwarmToolBase):
+        class MyTool_v2(AgentHaloToolBase):
             """This is my tool description"""
 
             def forward(self, a: str, b: int) -> None:
@@ -135,7 +135,7 @@ def test_incorrect_inputs_descriptions() -> None:
 
     with pytest.raises(ValueError) as e:
 
-        class MyTool_v3(NewtonSwarmToolBase):
+        class MyTool_v3(AgentHaloToolBase):
             """This is my tool description"""
 
             def forward(self, a: str, b: int) -> None:
@@ -146,7 +146,7 @@ def test_incorrect_inputs_descriptions() -> None:
 
     with pytest.raises(ValueError) as e:
 
-        class MyTool_v4(NewtonSwarmToolBase):
+        class MyTool_v4(AgentHaloToolBase):
             """This is my tool description"""
 
             def forward(self, a: str, b: int) -> None:
@@ -160,7 +160,7 @@ def test_incorrect_inputs_descriptions() -> None:
 
 
 def test_inputs_descriptions() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my tool description"""
 
         def forward(self, a: str, b: int) -> None:
@@ -171,7 +171,7 @@ def test_inputs_descriptions() -> None:
             """
             raise NotImplementedError
 
-    tool, smolagents_tool = newtonswarm_tool_and_smolagents_tool(MyTool())
+    tool, smolagents_tool = agenthalo_tool_and_smolagents_tool(MyTool())
     assert tool.inputs_descriptions == {"a": "This is a description for a", "b": "This is a description for b"}
     assert smolagents_tool.inputs == {
         "a": {"description": "This is a description for a", "type": "string"},
@@ -181,7 +181,7 @@ def test_inputs_descriptions() -> None:
 
 @pytest.mark.skip("Not implemented yet.")
 def test_multiline_inputs_descriptions() -> None:
-    class MyTool(NewtonSwarmToolBase):
+    class MyTool(AgentHaloToolBase):
         """This is my tool description"""
 
         def forward(self, a: str, b: int) -> None:

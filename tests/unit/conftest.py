@@ -3,7 +3,7 @@ import os
 import dotenv
 from _pytest.fixtures import fixture
 
-from newtonswarm.config import Config
+from agenthalo.config import Config
 
 
 @fixture

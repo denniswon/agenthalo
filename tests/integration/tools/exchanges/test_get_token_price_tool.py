@@ -2,8 +2,8 @@ from typing import Optional
 
 import pytest
 
-from newtonswarm.tools.exchanges import GetTokenPrice
-from newtonswarm.config import Config
+from agenthalo.tools.exchanges import GetTokenPrice
+from agenthalo.config import Config
 
 
 @pytest.mark.parametrize(

@@ -1,24 +1,24 @@
 from typing import List
 
 import dotenv
-from newtonswarm.agent import NewtonSwarmAgent
-from newtonswarm.config import Config
-from newtonswarm.core.tool import NewtonSwarmToolBase
-from newtonswarm.tools.core import GetTokenAddress
-from newtonswarm.tools.exchanges import GetTokenPrice
+from agenthalo.agent import AgentHaloAgent
+from agenthalo.config import Config
+from agenthalo.core.tool import AgentHaloToolBase
+from agenthalo.tools.core import GetTokenAddress
+from agenthalo.tools.exchanges import GetTokenPrice
 
 dotenv.load_dotenv()
 config = Config()
 
 # Initialize tools
-tools: List[NewtonSwarmToolBase] = [
+tools: List[AgentHaloToolBase] = [
     GetTokenAddress(config),  # Get token address from a symbol
     GetTokenPrice(config),  # Get the price of a token pair from available DEXes given addresses
 ]
 
 # Get LLM config for Anthropic
 llm_config = config.get_default_llm_config("anthropic")
-agent = NewtonSwarmAgent(tools=tools, model_id=llm_config.model_id)
+agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
 
 async def basic_quote(query: str) -> str:
     response = await agent.process_message(query)
