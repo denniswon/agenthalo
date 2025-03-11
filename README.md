@@ -32,10 +32,6 @@ NewtonSwarm is a starter kit for building LLM-powered AI agents that interpret n
   - On-chain data providers
 - 🔌 Easy integration of new data sources and execution venues
 
-### Roadmap
-
-- 🌐 Integration with Theoriq protocol to connect with growing ecosystem of agents and swarms providing trading strategies and signals
-
 ## Prerequisites
 
 - Python 3.11 or higher
@@ -114,25 +110,7 @@ Blockchain Access:
 
 - `ALCHEMY_API_KEY`: Your Alchemy API key for accessing blockchain data
 
-Ethereum Configuration (only if using Ethereum):
-
-- `ETH_RPC_URL`: RPC endpoint URL for connecting to Ethereum network
-- `ETH_WALLET_ADDRESS`: Your Ethereum wallet address for trading
-- `ETH_PRIVATE_KEY`: Private key for your Ethereum wallet
-
-Base Configuration (only if using Base):
-
-- `BASE_RPC_URL`: RPC endpoint URL for connecting to Base network
-- `BASE_WALLET_ADDRESS`: Your Base wallet address for trading
-- `BASE_PRIVATE_KEY`: Private key for your Base wallet
-
 #### Optional configurations:
-
-Testing environment variables:
-
-- `ETH_SEPOLIA_RPC_URL`: Your Sepolia testnet RPC endpoint URL
-- `ETH_SEPOLIA_WALLET_ADDRESS`: Your Ethereum wallet address for Sepolia testnet
-- `ETH_SEPOLIA_PRIVATE_KEY`: Private key for your Sepolia testnet wallet
 
 Notification settings:
 
@@ -169,11 +147,7 @@ Key configuration sections:
 
 Note: Always verify contract addresses from official sources.
 
-## Usage
-
-See [examples/README.md](examples/README.md) for more information about usage examples.
-
-## API
+## Run
 
 We also need to download the DStack simulator:
 
@@ -235,20 +209,6 @@ or use Makefile shortcuts:
 ```bash
 make dev-lint
 ```
-
-## Security
-
-For security concerns, please review our [Security Policy](SECURITY.md). We take all security issues seriously.
-
-## Support
-
-Need help? Check out our [Support Guide](SUPPORT.md) for ways to get assistance.
-
-We provide support and welcome feedback on our [Discord](https://discord.gg/theoriq-dev). We consider your feedback a gift and truly appreciate your meaningful contributions, which play a vital role in evolving our codebase.
-
-## Contributing
-
-NewtonSwarm is a project under active development. We welcome all contributions, pull requests, feature requests or reported issues.
 
 ## Disclaimer
 

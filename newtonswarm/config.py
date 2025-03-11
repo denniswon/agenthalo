@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 from typing import Any, Dict, List, Optional, Self, Sequence
@@ -7,12 +8,12 @@ from typing import Any, Dict, List, Optional, Self, Sequence
 import yaml
 from newtonswarm import BASE_PATH
 from newtonswarm.core.token import TokenInfo
+from newtonswarm.services.tappd import chain_account_info
 from pydantic.dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
 NATIVE_TOKENS = {"ethereum": ["ETH"], "ethereum_sepolia": ["ETH"], "base": ["ETH"], "solana": ["SOL"]}
-
 
 CONFIG_PATH = BASE_PATH / "config"
 
@@ -269,6 +270,12 @@ class Config:
                 symbol: TokenInfo(symbol=symbol, chain=chain, **token_config)
                 for symbol, token_config in values["tokens"].items()
             }
+
+        account_info = asyncio.run(chain_account_info(chain))
+
+        values["wallet_address"] = account_info[0]
+        values["private_key"] = account_info[1]
+
         return ChainConfig(**values)
 
     def get_chain_config_or_none(self, chain: str) -> Optional[ChainConfig]:
