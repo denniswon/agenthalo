@@ -28,10 +28,12 @@ tools: List[AgentHaloToolBase] = [
 # Create the agent
 agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
 
+
 # Interact with the agent
-async def _strategy_trade(query: str) -> str:
+async def _strategy_trade(query: str) -> str | None:
     response = await agent.process_message(query)
     return response
+
 
 # Interact with the agent
 async def main() -> None:

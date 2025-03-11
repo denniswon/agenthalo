@@ -104,7 +104,6 @@ You can also just chat with me naturally!"""
         await update.message.reply_text(f"Your Chat ID: `{chat_id}`", parse_mode=ParseMode.MARKDOWN)
 
     async def _handle_chat_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-
         if update.message is None:
             raise ValueError("missing message")
 

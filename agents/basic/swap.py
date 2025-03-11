@@ -22,10 +22,12 @@ tools: List[AgentHaloToolBase] = [
 llm_config = config.get_default_llm_config("anthropic")
 agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
 
+
 # Interact with the agent
-async def _swap(query: str) -> str:
+async def _swap(query: str) -> str | None:
     response = await agent.process_message(query)
     return response
+
 
 # Interact with the agent
 async def main() -> None:

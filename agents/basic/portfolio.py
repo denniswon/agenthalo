@@ -18,7 +18,7 @@ tools: List[AgentHaloToolBase] = [
 llm_config = config.get_default_llm_config("anthropic")
 agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
 
-async def _portfolio() -> str:
+
+async def _portfolio() -> str | None:
     response = await agent.process_message("Get portfolio balance on Ethereum Sepolia")
     return response
-    
