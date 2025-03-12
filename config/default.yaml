@@ -56,6 +56,10 @@ portfolio:
 # WARNING: These configurations will need to be checked for accuracy
 chain_config:
   ethereum:
+    wallet_address:
+      fromEnvVar: ETH_WALLET_ADDRESS
+    private_key:
+      fromEnvVar: ETH_PRIVATE_KEY
     gas_settings:
       max_priority_fee: 2000000000  # 2 gwei, currently not used
       gas_limit: 200000
@@ -82,6 +86,10 @@ chain_config:
         decimals: 18
   
   ethereum_sepolia:
+    wallet_address:
+      fromEnvVar: ETH_SEPOLIA_WALLET_ADDRESS
+    private_key:
+      fromEnvVar: ETH_SEPOLIA_PRIVATE_KEY
     gas_settings:
       max_priority_fee: 10000000000  # 10 gwei, currently not used
       gas_limit: 300000
@@ -99,6 +107,10 @@ chain_config:
         decimals: 6
 
   base:
+    wallet_address:
+      fromEnvVar: BASE_WALLET_ADDRESS
+    private_key:
+      fromEnvVar: BASE_PRIVATE_KEY
     gas_settings:
       max_priority_fee: 1000000000  # 1 gwei, currently not used
       gas_limit: 200000
@@ -140,6 +152,10 @@ chain_config:
         decimals: 18
 
   base_sepolia:
+    wallet_address:
+      fromEnvVar: BASE_WALLET_ADDRESS
+    private_key:
+      fromEnvVar: BASE_PRIVATE_KEY
     gas_settings:
       max_priority_fee: 1000000000  # 1 gwei, currently not used
       gas_limit: 200000
@@ -154,6 +170,10 @@ chain_config:
         decimals: 6
 
   solana:
+    wallet_address:
+      fromEnvVar: SOL_WALLET_ADDRESS
+    private_key:
+      fromEnvVar: SOL_PRIVATE_KEY
     rpc_url:
       fromEnvVar: SOLANA_RPC_URL
     tokens:
@@ -226,4 +246,4 @@ chain_config:
         decimals: 6
       GNON:
         address: "HeJUFDxfJSzYFUuHLxkMqCgytU31G6mjP4wKviwqpump" 
-        decimals: 6 
+        decimals: 6

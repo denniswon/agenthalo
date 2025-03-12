@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+from tabnanny import verbose
 from typing import Optional, Sequence
 
 from agenthalo.core.tool import AgentHaloToolBase
@@ -7,7 +8,7 @@ from agenthalo.core.tool.tool import AgentHaloToSmolAgentsToolAdapter
 from smolagents import CODE_SYSTEM_PROMPT, CodeAgent, LiteLLMModel
 
 
-class AgentHaloAgent:
+class HaloAgent:
 
     def __init__(
         self,
@@ -17,7 +18,7 @@ class AgentHaloAgent:
         hints: Optional[str] = None,
     ) -> None:
         """
-        Initialize the AgentHaloAgent.
+        Initialize the HaloAgent.
 
         Args:
             tools: A sequence of tools to use.
@@ -34,6 +35,7 @@ class AgentHaloAgent:
             model=LiteLLMModel(model_id=model_id),
             system_prompt=system_prompt,
             additional_authorized_imports=["json", "decimal"],
+            verbose=True,
         )
 
     async def process_message(self, current_message: str) -> Optional[str]:

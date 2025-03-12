@@ -19,7 +19,11 @@ class PortfolioEvm(PortfolioBase):
 
     def get_token_balances(self) -> List[TokenAmount]:
         balances = self._alchemy_client.get_token_balances(wallet=self._wallet.address, chain=self._wallet.chain)
-        result = []
+
+        native = TokenInfo.native(self._wallet.chain)
+        native_balance = self._evm_client.get_native_balance(self._wallet.address)
+
+        result = [native.to_amount_from_base_units(Wei(native_balance))]
         for balance in balances:
             token_info = self._evm_client.get_token_info(EVMClient.to_checksum_address(balance.contract_address))
             result.append(token_info.to_amount_from_base_units(Wei(balance.value)))

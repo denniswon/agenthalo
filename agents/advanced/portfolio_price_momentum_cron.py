@@ -5,10 +5,10 @@ import datetime
 import logging
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import List, Sequence
+from typing import List, Sequence, Optional
 
 import dotenv
-from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.agent import HaloAgent
 from agenthalo.agent.clients import CronJobClient
 from agenthalo.config import Config
 from agenthalo.services.alchemy import AlchemyClient
@@ -49,7 +49,7 @@ class PriceChanges:
         )
 
 
-class PriceMomentumCronAgent(AgentHaloAgent):
+class PriceMomentumCronAgent(HaloAgent):
     """
     A portfolio-aware momentum trading agent that combines deterministic analysis
     with AgentHalo reasoning and tools for position sizing and trade execution.
@@ -69,6 +69,7 @@ class PriceMomentumCronAgent(AgentHaloAgent):
         max_possible_percentage: Decimal = Decimal("50"),
         absolute_min_amount: Decimal = Decimal("0.0001"),
         base_token: str = "WETH",
+        config: Optional[Config] = None,
     ) -> None:
         """
         Initialize the PriceMomentumCronAgent.
@@ -98,7 +99,7 @@ class PriceMomentumCronAgent(AgentHaloAgent):
             raise ValueError(f"absolute_min_amount must be positive, got {absolute_min_amount}")
 
         self.alchemy_client = AlchemyClient.from_env()
-        self.config = Config()
+        self.config = config or Config()
         self.portfolio_client = Portfolio.from_config(self.config)
         self.price_history_tool = GetAlchemyPriceHistoryByAddress(self.alchemy_client)
         self.token_addresses = token_addresses
@@ -231,6 +232,7 @@ async def main() -> None:
     # Load environment variables
     dotenv.load_dotenv()
     config = Config()
+    await config.init()
 
     # Configure logging
     logging.basicConfig(
@@ -256,6 +258,7 @@ async def main() -> None:
         short_term_threshold=0.1,
         long_term_minutes=60,
         long_term_threshold=0.5,
+        config=config,
     )
 
     # Initialize the cron client

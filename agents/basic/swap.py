@@ -1,7 +1,7 @@
 from typing import List
 
 import dotenv
-from agenthalo.agent import AgentHaloAgent
+from agenthalo.agent import HaloAgent
 from agenthalo.config import Config
 from agenthalo.core.tool import AgentHaloToolBase
 from agenthalo.tools.core import GetTokenAddress
@@ -20,7 +20,7 @@ tools: List[AgentHaloToolBase] = [
 
 # Create the agent
 llm_config = config.get_default_llm_config("anthropic")
-agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
+agent = HaloAgent(tools=tools, model_id=llm_config.model_id)
 
 
 # Interact with the agent

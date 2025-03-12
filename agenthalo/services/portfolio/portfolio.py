@@ -92,7 +92,9 @@ class Portfolio:
     def from_config(cls, config: Config) -> Self:
         portfolios: List[PortfolioBase] = []
         for chain in config.get_supported_networks():
-            portfolios.append(cls.from_chain(config.get_chain_config(chain)))
+            chain_config = config.get_chain_config(chain)
+            portfolio = cls.from_chain(chain_config)
+            portfolios.append(portfolio)
         return cls(portfolios)
 
     @staticmethod

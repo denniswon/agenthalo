@@ -4,7 +4,7 @@ import random
 from typing import Callable, List
 
 import dotenv
-from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.agent import HaloAgent
 from agenthalo.agent.clients import CronJobClient
 from agenthalo.config import Config
 from agenthalo.core.tool import AgentHaloToolBase
@@ -18,6 +18,7 @@ logging.getLogger("smolagents").setLevel(logging.ERROR)
 async def main() -> None:
     dotenv.load_dotenv()
     config = Config()
+    await config.init()
 
     # Initialize tools for price-related operations
     # GetUsdPrice: General price queries
@@ -27,7 +28,7 @@ async def main() -> None:
 
     # Initialize the AgentHalo agent with the price tools
     llm_config = config.get_default_llm_config("anthropic")
-    agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id)
+    agent = HaloAgent(tools=tools, model_id=llm_config.model_id)
 
     def generate_message_cron_job1() -> str:
         # Randomly generate price queries for major cryptocurrencies

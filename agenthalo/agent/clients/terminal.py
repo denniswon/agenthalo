@@ -1,13 +1,13 @@
 import asyncio
 from typing import Any
 
-from ..agent import AgentHaloAgent
-from ..agent_client import AgentHaloAgentClient, ChatMessage, Context
+from ..agent import HaloAgent
+from ..agent_client import HaloAgentClient, ChatMessage, Context
 
 
-class TerminalClient(AgentHaloAgentClient[Any]):
+class TerminalClient(HaloAgentClient[Any]):
 
-    def __init__(self, client_id: str, agent: AgentHaloAgent) -> None:
+    def __init__(self, client_id: str, agent: HaloAgent) -> None:
         super().__init__(agent, client_id)
         self._client_id = client_id
 

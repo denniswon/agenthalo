@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Generic, List, Optional, TypeVar
 
-from .agent import AgentHaloAgent
+from .agent import HaloAgent
 
 T_Context = TypeVar("T_Context")
 
@@ -45,9 +45,9 @@ class ChatMessage:
         return cls(sender=sender, content=content, timestamp=datetime.now(), is_command=is_command)
 
 
-class AgentHaloAgentClient(ABC, Generic[T_Context]):
+class HaloAgentClient(ABC, Generic[T_Context]):
 
-    def __init__(self, agent: AgentHaloAgent, client_id: str, max_history: int = 50) -> None:
+    def __init__(self, agent: HaloAgent, client_id: str, max_history: int = 50) -> None:
         self._agent = agent
         self._agent_lock = asyncio.Lock()
         self._client_id = client_id

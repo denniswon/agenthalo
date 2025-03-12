@@ -3,7 +3,7 @@ import json
 from typing import List, Mapping
 
 import dotenv
-from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.agent import HaloAgent
 from agenthalo.agent.clients import TerminalClient
 from agenthalo.config import CONFIG_PATH, Config
 from agenthalo.core.tool import AgentHaloToolBase
@@ -26,6 +26,7 @@ from agenthalo.utils import read_text_file_to_string
 async def main() -> None:
     dotenv.load_dotenv()
     config = Config()
+    await config.init()
 
     telegram_config = config.get("telegram", {})
     telegram_bot_token = telegram_config.get("bot_token")
@@ -66,7 +67,7 @@ async def main() -> None:
     hints = read_text_file_to_string(CONFIG_PATH / "trading_strategy_agent_hints.txt")
 
     llm_config = config.get_default_llm_config("anthropic")
-    agent = AgentHaloAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
+    agent = HaloAgent(tools=tools, model_id=llm_config.model_id, system_prompt=system_prompt, hints=hints)
 
     terminal = TerminalClient("AgentHalo terminal", agent)
     await asyncio.gather(

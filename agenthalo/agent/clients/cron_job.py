@@ -1,15 +1,15 @@
 import asyncio
 from typing import Any, Callable
 
-from ..agent import AgentHaloAgent
-from ..agent_client import AgentHaloAgentClient, ChatMessage, Context
+from ..agent import HaloAgent
+from ..agent_client import HaloAgentClient, ChatMessage, Context
 
 
-class CronJobClient(AgentHaloAgentClient[Any]):
+class CronJobClient(HaloAgentClient[Any]):
 
     def __init__(
         self,
-        agent: AgentHaloAgent,
+        agent: HaloAgent,
         client_id: str,
         interval_seconds: int,
         message_generator: Callable[[], str],  # TODO: consider returning Optional[str] and not call agent with None
@@ -22,7 +22,7 @@ class CronJobClient(AgentHaloAgentClient[Any]):
         Initialize CronJobClient with conditional processing.
 
         Args:
-            agent: The AgentHaloAgent instance
+            agent: The HaloAgent instance
             client_id: Unique identifier for the client
             interval_seconds: Interval between message generation
             message_generator: Function that generates messages

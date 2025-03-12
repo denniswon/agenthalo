@@ -98,3 +98,19 @@ class TokenInfo(BaseModel):
     @classmethod
     def Ethereum(cls) -> TokenInfo:
         return cls(symbol="ETH", decimals=18, is_native=True, chain="ethereum", address="")
+
+    @staticmethod
+    def native(chain: str) -> TokenInfo:
+        return TokenInfo(
+            symbol="SOL",
+            address="So11111111111111111111111111111111111111111",
+            decimals=9,
+            chain=chain,
+            is_native=True
+        ) if chain == "solana" else TokenInfo(
+            symbol="ETH",
+            address="0x0000000000000000000000000000000000000000",
+            decimals=18,
+            chain=chain,
+            is_native=True
+        )

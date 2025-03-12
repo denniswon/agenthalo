@@ -7,8 +7,8 @@ from telegram._utils.types import FileInput
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from ..agent import AgentHaloAgent
-from ..agent_client import AgentHaloAgentClient, ChatMessage, Context
+from ..agent import HaloAgent
+from ..agent_client import HaloAgentClient, ChatMessage, Context
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +51,10 @@ class TelegramApp:
             raise e
 
 
-class TelegramBot(TelegramApp, AgentHaloAgentClient[Update]):
-    def __init__(self, agent: AgentHaloAgent, bot_token: str) -> None:
+class TelegramBot(TelegramApp, HaloAgentClient[Update]):
+    def __init__(self, agent: HaloAgent, bot_token: str) -> None:
         TelegramApp.__init__(self, bot_token)
-        AgentHaloAgentClient.__init__(self, agent=agent, client_id="telegram")
+        HaloAgentClient.__init__(self, agent=agent, client_id="telegram")
 
         self.message_queue: asyncio.Queue = asyncio.Queue()
 

@@ -2,7 +2,7 @@ import asyncio
 from typing import List
 
 import dotenv
-from agenthalo.agent.agent import AgentHaloAgent
+from agenthalo.agent.agent import HaloAgent
 from agenthalo.agent.clients import TerminalClient
 from agenthalo.config import Config
 from agenthalo.core.tool import AgentHaloToolBase
@@ -11,7 +11,7 @@ from agenthalo.tools.cookie.cookie_metrics import GetCookieMetricsBySymbol, GetC
 from agenthalo.tools.forecasting import ForecastTokenPrice
 
 
-class ForecastingAgent(AgentHaloAgent):
+class ForecastingAgent(HaloAgent):
     """
     This example demonstrates a forecasting agent that uses the `ForecastTokenPrice` to forecast the price of a token.
     The agent and the tool are both experimental. Neither have been validated for accuracy -- these are meant to serve
@@ -44,6 +44,7 @@ class ForecastingAgent(AgentHaloAgent):
 async def main() -> None:
     dotenv.load_dotenv()
     config = Config()
+    await config.init()
     llm_config = config.get_default_llm_config("anthropic")
 
     agent = ForecastingAgent(model_id=llm_config.model_id)

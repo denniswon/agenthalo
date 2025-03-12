@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import asyncio
 import logging
 import os
 from typing import Any, Dict, List, Optional, Self, Sequence
 
+import json
 import yaml
 from agenthalo import BASE_PATH
 from agenthalo.core.token import TokenInfo
 from agenthalo.services.tappd import chain_account_info
+from agenthalo.services.tappd import Keystore
 from pydantic.dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,9 @@ class LLMConfig:
 class Config:
     _instance = None
 
+    def to_str(self) -> str:
+        return json.dumps(self._config, indent=4)
+
     @staticmethod
     def configure_logging() -> None:
         """Configure logging for the entire application"""
@@ -144,7 +148,12 @@ class Config:
             network_env (str): Network environment to use. One of: "production", "test", "all"
         """
         self._network_env = network_env
+        self._keystore = Keystore()
         self._load_config(config_path)
+
+    async def init(self) -> None:
+        await self._keystore.prepare()
+        self._initialized = True
 
     @staticmethod
     def _substitute_env_vars(value: Any) -> Any:
@@ -271,11 +280,12 @@ class Config:
                 for symbol, token_config in values["tokens"].items()
             }
 
-        account_info = asyncio.run(chain_account_info(chain))
-        logger.debug(f"Account info for {chain}: {account_info}")
+        if self._initialized:
+            account_info = self._keystore.get_account_info(chain)
+            logger.debug(f"Account info for {chain}: {account_info}")
 
-        values["wallet_address"] = account_info[0]
-        values["private_key"] = account_info[1]
+            values["wallet_address"] = account_info[0]
+            values["private_key"] = account_info[1]
 
         return ChainConfig(**values)
 

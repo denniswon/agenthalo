@@ -1,16 +1,32 @@
-from typing import Any
-
-from agents.basic.portfolio import _portfolio
-from agents.basic.quote import basic_quote
-from agents.basic.strategy import _strategy_trade
-from agents.basic.swap import _swap
+from typing import Any, AsyncGenerator, Optional
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
-from dstack_sdk import AsyncTappdClient
 from fastapi import FastAPI
+
+from dstack_sdk import AsyncTappdClient
+
+from agents.basic.portfolio import fetch_portfolio
+from agents.basic.quote import basic_quote
+from agents.basic.strategy import analyze_strategy
+from agents.basic.swap import _swap
+from agenthalo.services.tappd.keystore import Keystore
 
 load_dotenv()
 
-app = FastAPI()
+ks: Keystore
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    global ks
+    ks = Keystore()
+    try:
+        await ks.prepare()
+        yield
+    finally:
+        await ks.clean_up()
+        ks = None
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")
@@ -32,10 +48,11 @@ async def derive_key() -> Any:
     return result
 
 
-@app.get("/portfolio")
-async def portfolio() -> Any:
-    portfolio = await _portfolio()
-    return portfolio
+@app.get("/get_portfolio")
+async def get_portfolio(chain: Optional[str] = None) -> Any:
+    query = f"What's the portfolio balances on chain {chain}?"
+    response = await fetch_portfolio(query)
+    return response
 
 
 @app.get("/get_quote")
@@ -55,5 +72,5 @@ async def swap() -> Any:
 @app.get("/strategy_trade")
 async def strategy_trade() -> Any:
     query = "Check strategy and initiate a trade if applicable"
-    response = await _strategy_trade(query)
+    response = await analyze_strategy(query)
     return response
