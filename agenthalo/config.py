@@ -147,6 +147,7 @@ class Config:
         Args:
             network_env (str): Network environment to use. One of: "production", "test", "all"
         """
+        self._initialized = False
         self._network_env = network_env
         self._keystore = Keystore()
         self._load_config(config_path)
