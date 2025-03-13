@@ -25,17 +25,14 @@ RUN apt-get update -qq && \
     libgmp-dev \
     libmpfr-dev
 
-# Copy only requirements to cache dependencies
-COPY pyproject.toml poetry.lock ./
+# Copy the entire project into the container
+COPY . .
 
 # Install dependencies
 RUN poetry install
-
-# Copy the entire project into the container
-COPY . .
 
 # Expose the port the app runs on
 EXPOSE 8000
 
 # Command to run the application
-CMD poetry run python -m fastapi
+CMD ["poetry", "run", "python", "-m", "fastapi"]
