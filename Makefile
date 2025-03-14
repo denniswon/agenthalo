@@ -22,13 +22,21 @@ install:
 dev-install:
 	poetry install --with dev
 
-# Run FastAPI server
-start:
-	poetry run python -m fastapi
+# Locally run app with tappd simulator
+start-local:
+	BUILD_ENV=local ./script.sh
 
-# Run FastAPI server in watch mode
+# Run app in Intel TDX
+start:
+	./script.sh
+
+# Locally run app with tappd simulator in watch mode
+dev-local:
+	BUILD_ENV=local APP_ENV=dev ./script.sh
+
+# Run app in Intel TDX in watch mode
 dev:
-	poetry run python -m fastapi dev
+	APP_ENV=dev ./script.sh
 
 # Code formatting and linting
 format:
@@ -59,3 +67,22 @@ all-tests: unit-tests integration-tests
 ci-all-tests:
 	poetry run pytest tests/unit tests/integration --cov=agenthalo --cov-report=html:reports/coverage \
 		--html=reports/pytest-report.html --self-contained-html
+
+# Docker
+docker-build:
+	poetry run docker build --platform linux/amd64 -t agenthalo .
+
+docker-run:
+	poetry run docker run -d -p 8000:8000 --env-file .env agenthalo
+
+docker-tag:
+	poetry run docker tag agenthalo jhwon0820/agenthalo:latest
+
+docker-push:
+	poetry run docker push jhwon0820/agenthalo:latest
+
+docker-compose-up:
+	poetry run docker-compose up -d
+
+docker-compose-logs:
+	poetry run docker-compose logs -f

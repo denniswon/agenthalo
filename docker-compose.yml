@@ -1,8 +1,22 @@
+version: '3.8'
 services:
-  app:
-    image: jhwon0820/agenthalo:latest
-    container_name: app
+  tappd:
+    # Build the Docker image using the Dockerfile in the current directory
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Map port 8000 on the host machine to port 8000 in the container
     ports:
-      - "8000:8000"
+      - 8000:8000
+
+    # Set the name of the container
+    container_name: agenthalo 
+
+    # Mount the host's /var/run/tappd.sock file as a volume in the container
     volumes:
       - /var/run/tappd.sock:/var/run/tappd.sock
+
+    # Load environment variables from a file named ".env"
+    env_file:
+      - .env

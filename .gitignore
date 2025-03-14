@@ -80,4 +80,4 @@ db.sqlite3-journal
 *.png
 
 # Tappd Simulator
-tappd-simulator-*
+tappd-simulator/
